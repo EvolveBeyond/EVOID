@@ -1,0 +1,5 @@
+# MiMoCode runtime files
+*.log
+*.tmp
+cache/
+sessions/

@@ -68,3 +68,13 @@ repos:
     hooks:
       - id: prettier
         types: [yaml]
+
+  # Auto-update documentation from source code
+  - repo: local
+    hooks:
+      - id: update-docs
+        name: Update documentation from source
+        entry: python scripts/update_docs.py
+        language: system
+        files: 'evoid/.*\.py$'
+        pass_filenames: false

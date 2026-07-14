@@ -1,36 +1,24 @@
 [project]
 name = "evoid"
-version = "0.2.3_Beta"
-description = "EVOILD: Evolutionary Intent-Oriented Lightweight Distribution - Data-Intent-Aware Microservices Framework"
+version = "0.3.0"
+description = "EVOID — Reference Runtime for Intent-Oriented Programming"
 authors = [
-    { name = "EVOID Team", email = "dev@evoid.dev" }
+    { name = "EvolveBeyond", email = "pakrohk@gamil.com" }
 ]
 dependencies = [
-    "fastapi>=0.104.0,<0.105.0",
-    "uvicorn[standard]>=0.24.0,<0.25.0",
-    "httpx>=0.25.0,<0.26.0",
-    "pydantic>=2.0.0,<3.0.0",
-    "pydantic-settings>=2.0.0,<3.0.0",
-    "typer>=0.9.0,<0.10.0",
-    "tomli>=2.0.0,<3.0.0",
-    "tomli-w>=1.0.0,<2.0.0",
-    "toml>=0.10.0,<0.11.0",
     "aiosqlite>=0.20.0,<0.21.0",
-    "jinja2>=3.1.0,<4.0.0",
-    "pyjwt>=2.10.1",
-    "psutil>=7.1.3",
+    "tomli_w>=1.0.0,<2.0.0",
 ]
 requires-python = ">=3.13.1"
 readme = "README.md"
 license = { text = "Apache-2.0" }
-keywords = ["microservices", "framework", "data-intent-aware", "rye-native", "fastapi", "distributed-systems", "evoid", "intent-oriented"]
+keywords = ["iop", "intent-oriented", "runtime", "evoid"]
 classifiers = [
-    "Development Status :: 4 - Beta",
+    "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: Apache Software License",
     "Programming Language :: Python :: 3.13",
     "Topic :: Software Development :: Libraries :: Application Frameworks",
-    "Topic :: Software Development :: Libraries :: Python Modules",
     "Typing :: Typed"
 ]
 
@@ -38,89 +26,52 @@ classifiers = [
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
-[tool.rye]
+[tool.uv]
 managed = true
 dev-dependencies = [
     "pytest>=7.0.0,<8.0.0",
     "pytest-asyncio>=0.21.0,<0.22.0",
-    "httpx>=0.25.0,<0.26.0",
     "black>=23.0.0,<24.0.0",
     "isort>=5.12.0,<6.0.0",
-    "flake8>=6.0.0,<7.0.0",
-    "mypy>=1.5.0,<2.0.0",
 ]
 
 [tool.hatch.metadata]
 allow-direct-references = true
 
 [tool.hatch.build.targets.wheel]
-packages = ["evoid"]
+packages = ["evoid", "evoid_cli"]
 
 [project.scripts]
-evo = "evoid.cli.main:app"
+evo = "evoid_cli.main:main"
 
-# Core dependencies for the framework
 [project.optional-dependencies]
+# Pydantic schema engine
+pydantic = ["pydantic>=2.0.0,<3.0.0"]
+# ASGI adapter
+asgi = ["starlette>=0.27.0,<0.40.0", "uvicorn[standard]>=0.24.0,<0.25.0"]
+# Robyn adapter
+robyn = ["robyn>=0.30.0,<1.0.0"]
+# Telegram adapter
+telegram = ["aiogram>=3.0.0,<4.0.0"]
+# Redis cache
+redis = ["redis>=4.0.0,<5.0.0"]
+# SQLAlchemy storage
+sqlalchemy = ["sqlalchemy[asyncio]>=2.0.0,<3.0.0", "aiosqlite>=0.20.0,<0.21.0"]
+# Loguru logger
+loguru = ["loguru>=0.7.0,<0.8.0"]
+# Full stack
+full = ["evoid[pydantic,asgi,redis,sqlalchemy,loguru]"]
 
-# Nano tier: Core + In-Memory Cache
-nano = [
-    "fastapi>=0.104.0,<0.105.0",
-    "uvicorn[standard]>=0.24.0,<0.25.0",
-    "httpx>=0.25.0,<0.26.0",
-    "pydantic>=2.0.0,<3.0.0",
-    "pydantic-settings>=2.0.0,<3.0.0",
-    "typer>=0.9.0,<0.10.0",
-    "tomli>=2.0.0,<3.0.0",
-    "tomli-w>=1.0.0,<2.0.0",
-    "toml>=0.10.0,<0.11.0",
-    "aiosqlite>=0.20.0,<0.21.0",
-    "jinja2>=3.1.0,<4.0.0",
-    "pyjwt>=2.10.1",
-    "psutil>=7.1.3",
-]
-
-# Mini tier: Nano + CLI + File Storage
-mini = [
-    "evox[nano]",
-    "click>=8.0.0,<9.0.0",
-]
-
-# Standard tier: Mini + SQLite/Postgres Drivers + Basic Auth
-standard = [
-    "evox[mini]",
-    "asyncpg>=0.28.0,<0.29.0",
-    "sqlalchemy[asyncio]>=2.0.0,<3.0.0",
-    "redis>=4.0.0,<5.0.0",
-]
-
-# Full tier: All providers (Redis, Advanced Monitoring, etc.)
-full = [
-    "evox[standard]",
-    "motor>=3.0.0,<4.0.0",
-    "aioredis>=2.0.0,<3.0.0",
-    "elasticsearch>=8.0.0,<9.0.0",
-    "prometheus-client>=0.15.0,<1.0.0",
-]
-
-# Development/testing dependencies
-test = [
-    "pytest>=7.0.0,<8.0.0",
-    "pytest-asyncio>=0.21.0,<0.22.0",
-    "httpx>=0.25.0,<0.26.0",
-]
-
-[tool.rye.scripts]
-dev = "evo run --dev"
-health = "evo health"
-test = "evo test"
+[tool.uv.scripts]
+dev = "evoid run"
 
 [tool.ruff]
 line-length = 120
 target-version = "py313"
 
 [tool.ruff.lint]
-select = ["E", "F", "W", "C90", "I", "N", "UP", "YTT", "S", "BLE", "FBT", "B", "A", "COM", "C4", "DTZ", "T10", "DJ", "EM", "EXE", "FA", "ISC", "ICN", "G", "INP", "PIE", "T20", "PYI", "PT", "Q", "RSE", "RET", "SLF", "SLOT", "SIM", "TID", "TCH", "INT", "ARG", "PTH", "TD", "FIX", "ERA", "PD", "PGH", "PL", "TRY", "FLY", "NPY", "AIR", "PERF"]
-ignore = ["E501", "F401", "F841"]
+select = ["E", "F", "W", "C90", "I", "N", "UP"]
+ignore = ["E501"]
 
 [tool.black]
 line-length = 120
