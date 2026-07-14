@@ -122,5 +122,8 @@ test_results/
 test_reports/
 coverage_reports/
 
+# 🤖 MiCode Agent Files (NEVER COMMIT!)
+.mimocode/
+
 # Other Repo
 wiki/
