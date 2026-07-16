@@ -122,8 +122,13 @@ test_results/
 test_reports/
 coverage_reports/
 
-# 🤖 MiCode Agent Files (NEVER COMMIT!)
+# 🤖 AI Agent Files
+.agents/
+.claude/
 .mimocode/
+AGENTS.md
+CLAUDE.md
+skills-lock.json
 
 # Other Repo
 wiki/
