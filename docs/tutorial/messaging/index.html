@@ -1,0 +1,178 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="Services communicate through the message bus using Intents, not HTTP."><meta name="generator" content="Astro v7.0.9"><meta property="og:title" content="Inter-Service Communication — EVOID"><meta property="og:description" content="Services communicate through the message bus using Intents, not HTTP."><meta property="og:type" content="website"><meta property="og:url" content="https://evolvebeyond.github.io/EVOID/EVOID/docs/tutorial/messaging/"><meta name="twitter:card" content="summary"><link rel="canonical" href="https://evolvebeyond.github.io/EVOID/EVOID/docs/tutorial/messaging/"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"><link rel="stylesheet" href="https://cdn.nerdfonts.com/3.0.3/css/jetbrainsmono.css"><title>Inter-Service Communication — EVOID</title><link rel="stylesheet" href="/EVOID/_astro/_..DV7GpS1O.css"></head><body><nav class="docs-navbar" data-astro-cid-zfittpdt><div class="docs-navbar-inner" data-astro-cid-zfittpdt><div class="docs-nav-left" data-astro-cid-zfittpdt><button class="docs-hamburger" id="docs-hamburger" aria-label="Open menu" data-astro-cid-zfittpdt><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-astro-cid-zfittpdt><path d="M3 12h18M3 6h18M3 18h18" data-astro-cid-zfittpdt></path></svg></button><a href="/EVOID/docs/getting-started/installation/" class="docs-nav-link-item " data-astro-cid-zfittpdt>Getting Started</a><a href="/EVOID/docs/learn/intent/" class="docs-nav-link-item " data-astro-cid-zfittpdt>Learn</a><a href="/EVOID/docs/tutorial/first-steps/" class="docs-nav-link-item active" data-astro-cid-zfittpdt>Tutorial</a></div><a href="/EVOID/" class="docs-nav-logo" data-astro-cid-zfittpdt><span class="logo-text" data-astro-cid-zfittpdt>evo</span></a><div class="docs-nav-right" data-astro-cid-zfittpdt><button class="docs-search-btn" id="docs-search-btn" aria-label="Search" data-astro-cid-zfittpdt><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-astro-cid-zfittpdt><circle cx="11" cy="11" r="8" data-astro-cid-zfittpdt></circle><path d="m21 21-4.35-4.35" data-astro-cid-zfittpdt></path></svg><span data-astro-cid-zfittpdt>Search</span><kbd data-astro-cid-zfittpdt>⌘K</kbd></button><a href="https://github.com/EvolveBeyond/EVOID" target="_blank" rel="noopener" class="docs-nav-github" aria-label="GitHub" data-astro-cid-zfittpdt><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" data-astro-cid-zfittpdt><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" data-astro-cid-zfittpdt></path></svg></a><button class="docs-theme-toggle" id="docs-theme-toggle" aria-label="Toggle theme" data-astro-cid-zfittpdt><svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-astro-cid-zfittpdt><circle cx="12" cy="12" r="5" data-astro-cid-zfittpdt></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" data-astro-cid-zfittpdt></path></svg><svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-astro-cid-zfittpdt><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" data-astro-cid-zfittpdt></path></svg></button></div></div></nav><div class="search-overlay" id="search-overlay"><div class="search-modal"><div class="search-header"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg><input type="text" id="search-input" class="search-input" placeholder="Search documentation..." autocomplete="off"><kbd class="search-kbd">ESC</kbd></div><div class="search-results" id="search-results"><p class="search-empty">Type to search...</p></div></div></div><script>(function(){const searchIndex = [{"t":"API Reference","d":"Complete reference for the EVOID public API.","s":"api"},{"t":"Examples","d":"Working examples that demonstrate EVOID features. All examples are in the `examples/` directory.","s":"examples"},{"t":"Installation","d":"- Python 3.13+ - uv (recommended) or pip","s":"getting-started/installation"},{"t":"Quick Start","d":"Build a working EVOID API in 5 minutes.","s":"getting-started/quickstart"},{"t":"What is IOP?","d":"Intent-Oriented Programming (IOP) is a paradigm where your data model IS your infrastructure policy.","s":"getting-started/what-is-iop"},{"t":"Why EVOID?","d":"The story behind Intent-Oriented Programming","s":"getting-started/why-evoid"},{"t":"Configuration","d":"EVOID uses TOML configuration. Change infrastructure by changing config — business logic stays untouched.","s":"learn/configuration"},{"t":"Intent","d":"An Intent is a frozen dataclass that declares what you want to achieve. It is pure data — the runtime reads it and decides what to do.","s":"learn/intent"},{"t":"Pipeline","d":"A pipeline is a list of processor names executed in order. No class, no state — just data in, result out.","s":"learn/pipeline"},{"t":"Plugins and Engines","d":"EVOID is infrastructure-agnostic. Every infrastructure component — database, cache, serializer, schema engine, DI — is a plugin. Plugins communicate through ...","s":"learn/plugins"},{"t":"Processors","d":"A processor is a function that receives a `Context` and returns a result. Processors are independent Lego blocks — each one does one thing, and the pipeline ...","s":"learn/processors"},{"t":"@controller Style","d":"Class-based syntax. Familiar if you have used NestJS or Django REST Framework.","s":"styles/controller"},{"t":"Native IOP Style","d":"Direct Intent system. No sugar. Full control over the IOP model.","s":"styles/native"},{"t":"@route Style","d":"Function-based syntax. Familiar if you have used FastAPI or Flask.","s":"styles/route"},{"t":"Controller Style","d":"Class-based routing for organizing large APIs.","s":"tutorial/controller-style"},{"t":"Custom Processors","d":"Write your own processors and inject them into any pipeline.","s":"tutorial/custom-processors"},{"t":"First Steps","d":"Install EVOID, create a project, and run your first endpoint in under 5 minutes.","s":"tutorial/first-steps"},{"t":"Intent Levels","d":"Every Intent has a level that determines its protection and processing pipeline.","s":"tutorial/intent-levels"},{"t":"Inter-Service Communication","d":"Services communicate through the message bus using Intents, not HTTP.","s":"tutorial/messaging"},{"t":"Native IOP","d":"Full control with explicit Intent management. No sugar — just the IOP model.","s":"tutorial/native-iop"},{"t":"Parallel Execution","d":"Run multiple Intents concurrently for faster responses.","s":"tutorial/parallel"},{"t":"Path Parameters","d":"Extract dynamic values from URL paths.","s":"tutorial/path-params"},{"t":"Pipeline Extensions","d":"Add cross-cutting concerns (logging, rate limiting, caching) without modifying handlers.","s":"tutorial/pipeline-extensions"},{"t":"Request Body","d":"Handle POST, PUT, and PATCH request data.","s":"tutorial/request-body"}];
+
+  window.__searchIndex = searchIndex;
+
+  function openSearch() {
+    var overlay = document.getElementById('search-overlay');
+    var input = document.getElementById('search-input');
+    overlay && overlay.classList.add('open');
+    input && input.focus();
+  }
+
+  function closeSearch() {
+    var overlay = document.getElementById('search-overlay');
+    overlay && overlay.classList.remove('open');
+    var input = document.getElementById('search-input');
+    if (input) input.value = '';
+    var results = document.getElementById('search-results');
+    if (results) results.innerHTML = '<p class="search-empty">Type to search...</p>';
+  }
+
+  function doSearch(query) {
+    var idx = window.__searchIndex || [];
+    if (!query) return idx;
+    var q = query.toLowerCase();
+    return idx.filter(function(item) {
+      return item.t.toLowerCase().indexOf(q) !== -1 ||
+             item.d.toLowerCase().indexOf(q) !== -1 ||
+             item.s.toLowerCase().indexOf(q) !== -1;
+    });
+  }
+
+  function highlightMatch(text, query) {
+    if (!query) return text;
+    var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+    return text.replace(re, '<mark>$1</mark>');
+  }
+
+  // Wire navbar search button
+  document.getElementById('docs-search-btn').addEventListener('click', openSearch);
+
+  document.getElementById('search-overlay').addEventListener('click', function(e) {
+    if (e.target === e.currentTarget) closeSearch();
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+      e.preventDefault();
+      var overlay = document.getElementById('search-overlay');
+      if (overlay && overlay.classList.contains('open')) {
+        closeSearch();
+      } else {
+        openSearch();
+      }
+    }
+    if (e.key === 'Escape') closeSearch();
+  });
+
+  document.getElementById('search-input').addEventListener('input', function(e) {
+    var query = e.target.value.trim();
+    var resultsEl = document.getElementById('search-results');
+    if (!resultsEl) return;
+
+    if (!query) {
+      resultsEl.innerHTML = '<p class="search-empty">Type to search...</p>';
+      return;
+    }
+
+    var results = doSearch(query);
+
+    if (results.length === 0) {
+      resultsEl.innerHTML = '<p class="search-empty">No results found.</p>';
+      return;
+    }
+
+    resultsEl.innerHTML = results.map(function(item) {
+      return '<a href="/EVOID/docs/' + item.s + '/" class="search-result">' +
+        '<div class="search-result-title">' + highlightMatch(item.t, query) + '</div>' +
+        '<div class="search-result-excerpt">' + highlightMatch(item.d, query) + '</div>' +
+      '</a>';
+    }).join('');
+  });
+})();</script><div class="docs-layout" data-astro-cid-zfittpdt><aside class="docs-sidebar" id="docs-sidebar"><div class="sidebar-header"><button class="sidebar-close" id="sidebar-close" aria-label="Close sidebar"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"></path></svg></button></div><nav class="sidebar-nav"><div class="sidebar-card "><button class="sidebar-card-header" aria-expanded="false"><span>Getting Started</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"></path></svg></button><ul class="sidebar-card-items"><li><a href="/docs/getting-started/installation/" class="sidebar-link "><span>Installation</span></a></li><li><a href="/docs/getting-started/quickstart/" class="sidebar-link "><span>Quick Start</span></a></li><li><a href="/docs/getting-started/why-evoid/" class="sidebar-link "><span>Why EVOID?</span></a></li><li><a href="/docs/getting-started/what-is-iop/" class="sidebar-link "><span>What is IOP?</span></a></li></ul></div><div class="sidebar-card "><button class="sidebar-card-header" aria-expanded="false"><span>Learn</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"></path></svg></button><ul class="sidebar-card-items"><li><a href="/docs/learn/intent/" class="sidebar-link "><span>Intent</span></a></li><li><a href="/docs/learn/pipeline/" class="sidebar-link "><span>Pipeline</span></a></li><li><a href="/docs/learn/processors/" class="sidebar-link "><span>Processors</span></a></li><li><a href="/docs/learn/plugins/" class="sidebar-link "><span>Plugins</span></a></li><li><a href="/docs/learn/configuration/" class="sidebar-link "><span>Configuration</span></a></li></ul></div><div class="sidebar-card "><button class="sidebar-card-header" aria-expanded="false"><span>Syntax Styles</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"></path></svg></button><ul class="sidebar-card-items"><li><a href="/docs/styles/route/" class="sidebar-link "><span>@route</span></a></li><li><a href="/docs/styles/controller/" class="sidebar-link "><span>@controller</span></a></li><li><a href="/docs/styles/native/" class="sidebar-link "><span>Native</span></a></li></ul></div><div class="sidebar-card active"><button class="sidebar-card-header" aria-expanded="true"><span>Tutorial</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"></path></svg></button><ul class="sidebar-card-items"><li><a href="/docs/tutorial/first-steps/" class="sidebar-link "><span class="step-num">01</span><span>First Steps</span></a></li><li><a href="/docs/tutorial/path-params/" class="sidebar-link "><span class="step-num">02</span><span>Path Parameters</span></a></li><li><a href="/docs/tutorial/request-body/" class="sidebar-link "><span class="step-num">03</span><span>Request Body</span></a></li><li><a href="/docs/tutorial/intent-levels/" class="sidebar-link "><span class="step-num">04</span><span>Intent Levels</span></a></li><li><a href="/docs/tutorial/pipeline-extensions/" class="sidebar-link "><span class="step-num">05</span><span>Pipeline Extensions</span></a></li><li><a href="/docs/tutorial/parallel/" class="sidebar-link "><span class="step-num">06</span><span>Parallel Execution</span></a></li><li><a href="/docs/tutorial/messaging/" class="sidebar-link active"><span class="step-num">07</span><span>Inter-Service Communication</span></a></li><li><a href="/docs/tutorial/custom-processors/" class="sidebar-link "><span class="step-num">08</span><span>Custom Processors</span></a></li><li><a href="/docs/tutorial/controller-style/" class="sidebar-link "><span class="step-num">09</span><span>Controller Style</span></a></li><li><a href="/docs/tutorial/native-iop/" class="sidebar-link "><span class="step-num">10</span><span>Native IOP</span></a></li></ul></div><a href="/docs/api/" class="sidebar-link standalone ">API Reference</a><a href="/docs/examples/" class="sidebar-link standalone ">Examples</a></nav></aside><div class="sidebar-overlay" id="sidebar-overlay"></div><script type="module">document.querySelectorAll(`.sidebar-card-header`).forEach(e=>{e.addEventListener(`click`,()=>{let t=e.closest(`.sidebar-card`),n=e.getAttribute(`aria-expanded`)===`true`;e.setAttribute(`aria-expanded`,String(!n)),t?.classList.toggle(`collapsed`)})}),document.querySelectorAll(`.sidebar-card:not(.active)`).forEach(e=>{e.classList.add(`collapsed`),e.querySelector(`.sidebar-card-header`)?.setAttribute(`aria-expanded`,`false`)});</script><main class="docs-content" data-astro-cid-zfittpdt><article class="docs-article" data-astro-cid-zfittpdt><h1 id="inter-service-communication">Inter-Service Communication</h1>
+<p>Services communicate through the message bus using Intents, not HTTP.</p>
+<h2 id="the-problem">The Problem</h2>
+<aside class="admonition admonition--info"><div class="admonition-title">Why not HTTP?</div>
+<p>Service A needs to notify Service B when something happens. Using HTTP adds network overhead, serialization cost, and failure points.</p>
+</aside>
+<h2 id="the-solution">The Solution</h2>
+<p>The message bus routes Intents directly between services on the same system.</p>
+<h2 id="publishing-and-subscribing">Publishing and Subscribing</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> evoid </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> Intent, Level, subscribe, publish</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Service A subscribes to "order_created"</span></span>
+<span class="line"><span style="color:#F97583">async</span><span style="color:#F97583"> def</span><span style="color:#B392F0"> on_order_created</span><span style="color:#E1E4E8">(intent: Intent) -> </span><span style="color:#79B8FF">None</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">    order_id </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> intent.metadata.get(</span><span style="color:#9ECBFF">"order_id"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#79B8FF">    print</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">f</span><span style="color:#9ECBFF">"Processing order </span><span style="color:#79B8FF">{</span><span style="color:#E1E4E8">order_id</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">subscribe(</span><span style="color:#9ECBFF">"order_created"</span><span style="color:#E1E4E8">, on_order_created)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Service B publishes an event</span></span>
+<span class="line"><span style="color:#E1E4E8">order_intent </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> Intent(</span></span>
+<span class="line"><span style="color:#FFAB70">    name</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"order_created"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#FFAB70">    level</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">Level.</span><span style="color:#79B8FF">STANDARD</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#FFAB70">    metadata</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#9ECBFF">"order_id"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">42</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"total"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">99.99</span><span style="color:#E1E4E8">},</span></span>
+<span class="line"><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">results </span><span style="color:#F97583">=</span><span style="color:#F97583"> await</span><span style="color:#E1E4E8"> publish(order_intent, </span><span style="color:#FFAB70">source</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"checkout-service"</span><span style="color:#E1E4E8">)</span></span></code></pre>
+<h2 id="topic-matching">Topic Matching</h2>
+<p>The bus matches by intent name, level, or wildcard:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#6A737D"># Exact match</span></span>
+<span class="line"><span style="color:#E1E4E8">subscribe(</span><span style="color:#9ECBFF">"process_payment"</span><span style="color:#E1E4E8">, handler)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Level match — receives all CRITICAL intents</span></span>
+<span class="line"><span style="color:#E1E4E8">subscribe(</span><span style="color:#9ECBFF">"critical"</span><span style="color:#E1E4E8">, handler)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Wildcard — receives everything</span></span>
+<span class="line"><span style="color:#E1E4E8">subscribe(</span><span style="color:#9ECBFF">"*"</span><span style="color:#E1E4E8">, handler)</span></span></code></pre>
+<h2 id="multiple-subscribers">Multiple Subscribers</h2>
+<p>Multiple handlers can subscribe to the same topic:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">async</span><span style="color:#F97583"> def</span><span style="color:#B392F0"> send_email</span><span style="color:#E1E4E8">(intent: Intent) -> </span><span style="color:#79B8FF">None</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#79B8FF">    print</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"Sending email..."</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">async</span><span style="color:#F97583"> def</span><span style="color:#B392F0"> update_inventory</span><span style="color:#E1E4E8">(intent: Intent) -> </span><span style="color:#79B8FF">None</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#79B8FF">    print</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"Updating inventory..."</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">subscribe(</span><span style="color:#9ECBFF">"order_created"</span><span style="color:#E1E4E8">, send_email)</span></span>
+<span class="line"><span style="color:#E1E4E8">subscribe(</span><span style="color:#9ECBFF">"order_created"</span><span style="color:#E1E4E8">, update_inventory)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Both run concurrently when "order_created" is published</span></span></code></pre>
+<h2 id="service-model">Service Model</h2>
+<p>Group related handlers into a Service:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> evoid.native </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> create_service, on, run</span></span>
+<span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> evoid </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> Intent, Level</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">service </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> create_service(</span><span style="color:#9ECBFF">"order-service"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#79B8FF">ORDER_INTENT</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> Intent(</span><span style="color:#FFAB70">name</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"create_order"</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">level</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">Level.</span><span style="color:#79B8FF">CRITICAL</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">async</span><span style="color:#F97583"> def</span><span style="color:#B392F0"> handle_order</span><span style="color:#E1E4E8">(intent: Intent) -> </span><span style="color:#79B8FF">dict</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#6A737D">    # Process order...</span></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#E1E4E8"> {</span><span style="color:#9ECBFF">"status"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"created"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"order_id"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">123</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">on(service, </span><span style="color:#79B8FF">ORDER_INTENT</span><span style="color:#E1E4E8">, handle_order)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">await</span><span style="color:#E1E4E8"> run(service, </span><span style="color:#FFAB70">port</span><span style="color:#F97583">=</span><span style="color:#79B8FF">8001</span><span style="color:#E1E4E8">)</span></span></code></pre>
+<h2 id="calling-other-services">Calling Other Services</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> evoid </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> Intent, Level</span></span>
+<span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> evoid.core.service </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> call, emit</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Synchronous call (waits for response)</span></span>
+<span class="line"><span style="color:#E1E4E8">result </span><span style="color:#F97583">=</span><span style="color:#F97583"> await</span><span style="color:#E1E4E8"> call(service, Intent(</span></span>
+<span class="line"><span style="color:#FFAB70">    name</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"get_user"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#FFAB70">    level</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">Level.</span><span style="color:#79B8FF">STANDARD</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#FFAB70">    metadata</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#9ECBFF">"user_id"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">42</span><span style="color:#E1E4E8">},</span></span>
+<span class="line"><span style="color:#E1E4E8">))</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Fire-and-forget (async, no waiting)</span></span>
+<span class="line"><span style="color:#F97583">await</span><span style="color:#E1E4E8"> emit(service, Intent(</span></span>
+<span class="line"><span style="color:#FFAB70">    name</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"send_notification"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#FFAB70">    level</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">Level.</span><span style="color:#79B8FF">EPHEMERAL</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#FFAB70">    metadata</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#9ECBFF">"message"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"Order shipped"</span><span style="color:#E1E4E8">},</span></span>
+<span class="line"><span style="color:#E1E4E8">))</span></span></code></pre>
+<h2 id="message-history">Message History</h2>
+<aside class="admonition admonition--tip"><div class="admonition-title">Debugging</div>
+<p>Use</p>
+</aside>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> evoid.core.message_bus </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> get_history</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">history </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> get_history()</span></span>
+<span class="line"><span style="color:#F97583">for</span><span style="color:#E1E4E8"> msg </span><span style="color:#F97583">in</span><span style="color:#E1E4E8"> history:</span></span>
+<span class="line"><span style="color:#79B8FF">    print</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">f</span><span style="color:#9ECBFF">"</span><span style="color:#79B8FF">{</span><span style="color:#E1E4E8">msg.source</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF"> → </span><span style="color:#79B8FF">{</span><span style="color:#E1E4E8">msg.intent.name</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">)</span></span></code></pre></article><nav class="docs-nav"><div class="docs-nav-inner"><a href="/docs/tutorial/parallel/" class="docs-nav-link docs-nav-prev"><span class="docs-nav-label">← Previous</span><span class="docs-nav-title">Parallel Execution</span></a><div class="docs-nav-divider"></div><a href="/docs/tutorial/custom-processors/" class="docs-nav-link docs-nav-next"><span class="docs-nav-label">Next →</span><span class="docs-nav-title">Custom Processors</span></a></div></nav></main><aside class="docs-toc"><nav class="toc-nav"><p class="toc-title">On this page</p><ul><li class="toc-depth-2"><a href="#the-problem" class="toc-link">The Problem</a></li><li class="toc-depth-2"><a href="#the-solution" class="toc-link">The Solution</a></li><li class="toc-depth-2"><a href="#publishing-and-subscribing" class="toc-link">Publishing and Subscribing</a></li><li class="toc-depth-2"><a href="#topic-matching" class="toc-link">Topic Matching</a></li><li class="toc-depth-2"><a href="#multiple-subscribers" class="toc-link">Multiple Subscribers</a></li><li class="toc-depth-2"><a href="#service-model" class="toc-link">Service Model</a></li><li class="toc-depth-2"><a href="#calling-other-services" class="toc-link">Calling Other Services</a></li><li class="toc-depth-2"><a href="#message-history" class="toc-link">Message History</a></li></ul></nav></aside></div><script type="module">document.getElementById(`docs-hamburger`)?.addEventListener(`click`,()=>{document.getElementById(`docs-sidebar`)?.classList.toggle(`open`),document.getElementById(`sidebar-overlay`)?.classList.toggle(`open`)}),document.getElementById(`sidebar-overlay`)?.addEventListener(`click`,()=>{document.getElementById(`docs-sidebar`)?.classList.remove(`open`),document.getElementById(`sidebar-overlay`)?.classList.remove(`open`)}),document.getElementById(`docs-theme-toggle`)?.addEventListener(`click`,()=>{let e=document.documentElement,t=e.getAttribute(`data-theme`)===`dark`?`light`:`dark`;e.setAttribute(`data-theme`,t),localStorage.setItem(`theme`,t)});</script><script>
+      (function() {
+        var stored = localStorage.getItem('theme');
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var theme = stored || (prefersDark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script><script type="module">document.addEventListener(`astro:page-load`,e),document.addEventListener(`DOMContentLoaded`,e);function e(){document.querySelectorAll(`.tabs`).forEach(e=>{let t=e.querySelectorAll(`.tab-btn`),n=e.querySelectorAll(`.tab-panel`);t.forEach(r=>{r.addEventListener(`click`,()=>{let i=r.getAttribute(`data-tab`);t.forEach(e=>e.classList.remove(`active`)),n.forEach(e=>e.classList.remove(`active`)),r.classList.add(`active`),e.querySelector(`#`+CSS.escape(i))?.classList.add(`active`)})})})}</script></body></html>

@@ -1,0 +1,293 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="Intent-Oriented Programming Runtime"><meta name="generator" content="Astro v7.0.9"><!-- OpenGraph --><meta property="og:title" content="EVOID Docs Admin"><meta property="og:description" content="Intent-Oriented Programming Runtime"><meta property="og:type" content="website"><meta property="og:url" content="https://evolvebeyond.github.io/EVOID/"><meta name="twitter:card" content="summary"><link rel="canonical" href="https://evolvebeyond.github.io/EVOID/"><!-- Fonts --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"><link rel="stylesheet" href="https://cdn.nerdfonts.com/3.0.3/css/jetbrainsmono.css"><title>EVOID Docs Admin</title><link rel="stylesheet" href="/EVOID/_astro/bento.DlEyyY2v.css"><link rel="stylesheet" href="/EVOID/_astro/index.CX34FcKq.css"></head><body><div class="admin-container" data-astro-cid-nsou3le4><header class="admin-header" data-astro-cid-nsou3le4><div class="admin-brand" data-astro-cid-nsou3le4><a href="/EVOID/" class="admin-logo" data-astro-cid-nsou3le4>EVOID</a><span class="admin-divider" data-astro-cid-nsou3le4>/</span><span class="admin-title" data-astro-cid-nsou3le4>Docs Editor</span></div><div class="admin-actions" data-astro-cid-nsou3le4><span id="status" class="admin-status" data-astro-cid-nsou3le4></span><button id="btn-save" class="btn btn-glow" disabled data-astro-cid-nsou3le4>Save to GitHub</button></div></header><!-- Token Setup --><div id="token-panel" class="admin-panel" data-astro-cid-nsou3le4><h2 data-astro-cid-nsou3le4>GitHub Token</h2><p data-astro-cid-nsou3le4>A personal access token with <code data-astro-cid-nsou3le4>repo</code> scope is needed to read and write files.</p><div class="token-input-row" data-astro-cid-nsou3le4><input type="password" id="token-input" placeholder="ghp_xxxxxxxxxxxx" class="admin-input" data-astro-cid-nsou3le4><button id="btn-connect" class="btn btn-glow" data-astro-cid-nsou3le4>Connect</button></div><p class="token-hint" data-astro-cid-nsou3le4>Token is stored in your browser's localStorage. Never shared with anyone.</p></div><!-- Main Editor (hidden until connected) --><div id="editor-panel" class="admin-editor" style="display:none" data-astro-cid-nsou3le4><!-- Sidebar: File Tree --><aside class="admin-sidebar" id="file-tree" data-astro-cid-nsou3le4><div class="sidebar-header" data-astro-cid-nsou3le4><input type="text" id="search-files" placeholder="Search files..." class="admin-input admin-input--sm" data-astro-cid-nsou3le4></div><div class="sidebar-files" id="file-list" data-astro-cid-nsou3le4></div></aside><!-- Editor Area --><main class="admin-main" data-astro-cid-nsou3le4><div id="editor-empty" class="admin-empty" data-astro-cid-nsou3le4><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.3" data-astro-cid-nsou3le4><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" data-astro-cid-nsou3le4></path><polyline points="14 2 14 8 20 8" data-astro-cid-nsou3le4></polyline><line x1="16" y1="13" x2="8" y2="13" data-astro-cid-nsou3le4></line><line x1="16" y1="17" x2="8" y2="17" data-astro-cid-nsou3le4></line><polyline points="10 9 9 9 8 9" data-astro-cid-nsou3le4></polyline></svg><p data-astro-cid-nsou3le4>Select a file from the sidebar to edit</p></div><div id="editor-workspace" style="display:none" data-astro-cid-nsou3le4><div class="editor-toolbar" data-astro-cid-nsou3le4><span id="file-path" class="editor-path" data-astro-cid-nsou3le4></span><div class="editor-tabs" data-astro-cid-nsou3le4><button class="editor-tab active" data-tab="write" data-astro-cid-nsou3le4>Write</button><button class="editor-tab" data-tab="preview" data-astro-cid-nsou3le4>Preview</button></div></div><div id="tab-write" class="editor-tab-content" data-astro-cid-nsou3le4><textarea id="editor-textarea" class="editor-textarea" spellcheck="false" data-astro-cid-nsou3le4></textarea></div><div id="tab-preview" class="editor-tab-content" style="display:none" data-astro-cid-nsou3le4><div id="editor-preview" class="editor-preview" data-astro-cid-nsou3le4></div></div></div></main></div></div><script>
+    const REPO = 'EvolveBeyond/EVOID';
+    const DOCS_PATH = 'docs/docs-astro/src/content/docs';
+    const BRANCH = 'main';
+
+    let token = localStorage.getItem('evoid_docs_token') || '';
+    let currentFile = null;
+    let currentSha = null;
+    let files = [];
+    let modified = false;
+
+    const $ = (s) => document.querySelector(s);
+    const $$ = (s) => document.querySelectorAll(s);
+
+    // --- Init ---
+    if (token) {
+      $('#token-input').value = token;
+      connect();
+    }
+
+    // --- Token ---
+    $('#btn-connect').addEventListener('click', connect);
+    $('#token-input').addEventListener('keydown', (e) => { if (e.key === 'Enter') connect(); });
+
+    async function connect() {
+      const t = $('#token-input').value.trim();
+      if (!t) return;
+
+      setStatus('Connecting...', 'loading');
+      try {
+        const res = await ghFetch(`/repos/${REPO}/contents/${DOCS_PATH}`);
+        if (!res.ok) throw new Error('Invalid token or repo access');
+        token = t;
+        localStorage.setItem('evoid_docs_token', token);
+        $('#token-panel').style.display = 'none';
+        $('#editor-panel').style.display = 'flex';
+        $('#btn-save').disabled = false;
+        setStatus('Connected', 'success');
+        await loadFiles();
+      } catch (e) {
+        setStatus('Connection failed: ' + e.message, 'error');
+      }
+    }
+
+    // --- GitHub API ---
+    function ghFetch(path, opts = {}) {
+      return fetch(`https://api.github.com${path}`, {
+        ...opts,
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/vnd.github.v3+json',
+          'Content-Type': 'application/json',
+          ...opts.headers,
+        },
+      });
+    }
+
+    // --- File Tree ---
+    async function loadFiles() {
+      setStatus('Loading files...', 'loading');
+      try {
+        files = [];
+        await walkDir(DOCS_PATH);
+        files.sort((a, b) => a.path.localeCompare(b.path));
+        renderFileTree();
+        setStatus(`${files.length} files loaded`, 'success');
+      } catch (e) {
+        setStatus('Failed to load files: ' + e.message, 'error');
+      }
+    }
+
+    async function walkDir(path) {
+      const res = await ghFetch(`/repos/${REPO}/contents/${path}?ref=${BRANCH}`);
+      if (!res.ok) return;
+      const items = await res.json();
+      for (const item of items) {
+        if (item.type === 'file' && item.name.endsWith('.md')) {
+          files.push({
+            name: item.name,
+            path: item.path,
+            sha: item.sha,
+            url: item.url,
+          });
+        } else if (item.type === 'dir') {
+          await walkDir(item.path);
+        }
+      }
+    }
+
+    function renderFileTree(filter = '') {
+      const list = $('#file-list');
+      list.innerHTML = '';
+
+      const filtered = filter
+        ? files.filter(f => f.path.toLowerCase().includes(filter.toLowerCase()))
+        : files;
+
+      // Group by directory
+      const groups = {};
+      for (const f of filtered) {
+        const parts = f.path.replace(DOCS_PATH + '/', '').split('/');
+        const dir = parts.length > 1 ? parts.slice(0, -1).join('/') : '(root)';
+        if (!groups[dir]) groups[dir] = [];
+        groups[dir].push(f);
+      }
+
+      for (const [dir, dirFiles] of Object.entries(groups)) {
+        const groupEl = document.createElement('div');
+        groupEl.className = 'file-group';
+        groupEl.textContent = dir;
+        list.appendChild(groupEl);
+
+        for (const f of dirFiles) {
+          const el = document.createElement('div');
+          el.className = 'file-item';
+          el.dataset.path = f.path;
+          el.innerHTML = `
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
+            </svg>
+            <span>${f.name}</span>
+          `;
+          el.addEventListener('click', () => openFile(f));
+          list.appendChild(el);
+        }
+      }
+    }
+
+    $('#search-files').addEventListener('input', (e) => {
+      renderFileTree(e.target.value);
+    });
+
+    // --- Editor ---
+    async function openFile(file) {
+      if (modified && !confirm('You have unsaved changes. Discard?')) return;
+
+      setStatus('Loading...', 'loading');
+      try {
+        const res = await ghFetch(`/repos/${REPO}/contents/${file.path}?ref=${BRANCH}`);
+        if (!res.ok) throw new Error('Failed to load file');
+        const data = await res.json();
+        const content = decodeBase64(data.content);
+
+        currentFile = file;
+        currentSha = data.sha;
+        modified = false;
+
+        $('#file-path').textContent = file.path.replace(DOCS_PATH + '/', '');
+        $('#editor-textarea').value = content;
+        $('#editor-empty').style.display = 'none';
+        $('#editor-workspace').style.display = 'flex';
+        $('#editor-workspace').style.flexDirection = 'column';
+        $('#editor-workspace').style.flex = '1';
+
+        // Update active state
+        $$('.file-item').forEach(el => el.classList.remove('active'));
+        $(`.file-item[data-path="${file.path}"]`)?.classList.add('active');
+
+        updatePreview();
+        switchTab('write');
+        setStatus('Loaded', 'success');
+      } catch (e) {
+        setStatus('Failed: ' + e.message, 'error');
+      }
+    }
+
+    function decodeBase64(str) {
+      return decodeURIComponent(
+        atob(str).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join('')
+      );
+    }
+
+    // --- Tabs ---
+    $$('.editor-tab').forEach(tab => {
+      tab.addEventListener('click', () => switchTab(tab.dataset.tab));
+    });
+
+    function switchTab(name) {
+      $$('.editor-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+      $('#tab-write').style.display = name === 'write' ? 'block' : 'none';
+      $('#tab-preview').style.display = name === 'preview' ? 'block' : 'none';
+      if (name === 'preview') updatePreview();
+    }
+
+    // --- Preview (minimal markdown) ---
+    function updatePreview() {
+      const md = $('#editor-textarea').value;
+      $('#editor-preview').innerHTML = markdownToHtml(md);
+    }
+
+    function markdownToHtml(md) {
+      let html = md
+        // Code blocks
+        .replace(/```(\w*)\n([\s\S]*?)```/g, '<pre><code class="lang-$1">$2</code></pre>')
+        // Inline code
+        .replace(/`([^`]+)`/g, '<code>$1</code>')
+        // Headers
+        .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+        .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+        .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+        // Bold and italic
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.+?)\*/g, '<em>$1</em>')
+        // Links
+        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>')
+        // Images
+        .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" />')
+        // Blockquotes
+        .replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>')
+        // Unordered lists
+        .replace(/^[\-\*] (.+)$/gm, '<li>$1</li>')
+        // Horizontal rules
+        .replace(/^---$/gm, '<hr />')
+        // Paragraphs (double newline)
+        .replace(/\n\n/g, '</p><p>')
+        // Single newlines to <br>
+        .replace(/\n/g, '<br>');
+
+      return '<p>' + html + '</p>';
+    }
+
+    // --- Track changes ---
+    $('#editor-textarea').addEventListener('input', () => {
+      if (!modified) {
+        modified = true;
+        const dot = document.createElement('span');
+        dot.className = 'unsaved-dot';
+        $('#file-path').appendChild(dot);
+      }
+    });
+
+    // --- Save ---
+    $('#btn-save').addEventListener('click', saveFile);
+
+    async function saveFile() {
+      if (!currentFile || !modified) return;
+
+      setStatus('Saving...', 'loading');
+      try {
+        const content = $('#editor-textarea').value;
+        const encoded = btoa(unescape(encodeURIComponent(content)));
+
+        const res = await ghFetch(`/repos/${REPO}/contents/${currentFile.path}`, {
+          method: 'PUT',
+          body: JSON.stringify({
+            message: `docs: update ${currentFile.name}`,
+            content: encoded,
+            sha: currentSha,
+            branch: BRANCH,
+          }),
+        });
+
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.message || 'Save failed');
+        }
+
+        const data = await res.json();
+        currentSha = data.content.sha;
+        modified = false;
+
+        // Remove unsaved dot
+        const dot = $('.unsaved-dot');
+        if (dot) dot.remove();
+
+        setStatus('Saved to GitHub', 'success');
+      } catch (e) {
+        setStatus('Save failed: ' + e.message, 'error');
+      }
+    }
+
+    // Keyboard shortcut: Ctrl+S
+    document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault();
+        saveFile();
+      }
+    });
+
+    // --- Status ---
+    function setStatus(msg, type = '') {
+      const el = $('#status');
+      el.textContent = msg;
+      el.className = 'admin-status ' + type;
+    }
+  </script><script>
+      (function() {
+        var stored = localStorage.getItem('theme');
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var theme = stored || (prefersDark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script></body></html>

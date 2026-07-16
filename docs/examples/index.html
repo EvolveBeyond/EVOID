@@ -1,0 +1,315 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="Working examples that demonstrate EVOID features. All examples are in the `examples/` directory."><meta name="generator" content="Astro v7.0.9"><meta property="og:title" content="Examples — EVOID"><meta property="og:description" content="Working examples that demonstrate EVOID features. All examples are in the `examples/` directory."><meta property="og:type" content="website"><meta property="og:url" content="https://evolvebeyond.github.io/EVOID/EVOID/docs/examples/"><meta name="twitter:card" content="summary"><link rel="canonical" href="https://evolvebeyond.github.io/EVOID/EVOID/docs/examples/"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"><link rel="stylesheet" href="https://cdn.nerdfonts.com/3.0.3/css/jetbrainsmono.css"><title>Examples — EVOID</title><link rel="stylesheet" href="/EVOID/_astro/_..DV7GpS1O.css"></head><body><nav class="docs-navbar" data-astro-cid-zfittpdt><div class="docs-navbar-inner" data-astro-cid-zfittpdt><div class="docs-nav-left" data-astro-cid-zfittpdt><button class="docs-hamburger" id="docs-hamburger" aria-label="Open menu" data-astro-cid-zfittpdt><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-astro-cid-zfittpdt><path d="M3 12h18M3 6h18M3 18h18" data-astro-cid-zfittpdt></path></svg></button><a href="/EVOID/docs/getting-started/installation/" class="docs-nav-link-item active" data-astro-cid-zfittpdt>Getting Started</a><a href="/EVOID/docs/learn/intent/" class="docs-nav-link-item " data-astro-cid-zfittpdt>Learn</a><a href="/EVOID/docs/tutorial/first-steps/" class="docs-nav-link-item " data-astro-cid-zfittpdt>Tutorial</a></div><a href="/EVOID/" class="docs-nav-logo" data-astro-cid-zfittpdt><span class="logo-text" data-astro-cid-zfittpdt>evo</span></a><div class="docs-nav-right" data-astro-cid-zfittpdt><button class="docs-search-btn" id="docs-search-btn" aria-label="Search" data-astro-cid-zfittpdt><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-astro-cid-zfittpdt><circle cx="11" cy="11" r="8" data-astro-cid-zfittpdt></circle><path d="m21 21-4.35-4.35" data-astro-cid-zfittpdt></path></svg><span data-astro-cid-zfittpdt>Search</span><kbd data-astro-cid-zfittpdt>⌘K</kbd></button><a href="https://github.com/EvolveBeyond/EVOID" target="_blank" rel="noopener" class="docs-nav-github" aria-label="GitHub" data-astro-cid-zfittpdt><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" data-astro-cid-zfittpdt><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" data-astro-cid-zfittpdt></path></svg></a><button class="docs-theme-toggle" id="docs-theme-toggle" aria-label="Toggle theme" data-astro-cid-zfittpdt><svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-astro-cid-zfittpdt><circle cx="12" cy="12" r="5" data-astro-cid-zfittpdt></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" data-astro-cid-zfittpdt></path></svg><svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-astro-cid-zfittpdt><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" data-astro-cid-zfittpdt></path></svg></button></div></div></nav><div class="search-overlay" id="search-overlay"><div class="search-modal"><div class="search-header"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg><input type="text" id="search-input" class="search-input" placeholder="Search documentation..." autocomplete="off"><kbd class="search-kbd">ESC</kbd></div><div class="search-results" id="search-results"><p class="search-empty">Type to search...</p></div></div></div><script>(function(){const searchIndex = [{"t":"API Reference","d":"Complete reference for the EVOID public API.","s":"api"},{"t":"Examples","d":"Working examples that demonstrate EVOID features. All examples are in the `examples/` directory.","s":"examples"},{"t":"Installation","d":"- Python 3.13+ - uv (recommended) or pip","s":"getting-started/installation"},{"t":"Quick Start","d":"Build a working EVOID API in 5 minutes.","s":"getting-started/quickstart"},{"t":"What is IOP?","d":"Intent-Oriented Programming (IOP) is a paradigm where your data model IS your infrastructure policy.","s":"getting-started/what-is-iop"},{"t":"Why EVOID?","d":"The story behind Intent-Oriented Programming","s":"getting-started/why-evoid"},{"t":"Configuration","d":"EVOID uses TOML configuration. Change infrastructure by changing config — business logic stays untouched.","s":"learn/configuration"},{"t":"Intent","d":"An Intent is a frozen dataclass that declares what you want to achieve. It is pure data — the runtime reads it and decides what to do.","s":"learn/intent"},{"t":"Pipeline","d":"A pipeline is a list of processor names executed in order. No class, no state — just data in, result out.","s":"learn/pipeline"},{"t":"Plugins and Engines","d":"EVOID is infrastructure-agnostic. Every infrastructure component — database, cache, serializer, schema engine, DI — is a plugin. Plugins communicate through ...","s":"learn/plugins"},{"t":"Processors","d":"A processor is a function that receives a `Context` and returns a result. Processors are independent Lego blocks — each one does one thing, and the pipeline ...","s":"learn/processors"},{"t":"@controller Style","d":"Class-based syntax. Familiar if you have used NestJS or Django REST Framework.","s":"styles/controller"},{"t":"Native IOP Style","d":"Direct Intent system. No sugar. Full control over the IOP model.","s":"styles/native"},{"t":"@route Style","d":"Function-based syntax. Familiar if you have used FastAPI or Flask.","s":"styles/route"},{"t":"Controller Style","d":"Class-based routing for organizing large APIs.","s":"tutorial/controller-style"},{"t":"Custom Processors","d":"Write your own processors and inject them into any pipeline.","s":"tutorial/custom-processors"},{"t":"First Steps","d":"Install EVOID, create a project, and run your first endpoint in under 5 minutes.","s":"tutorial/first-steps"},{"t":"Intent Levels","d":"Every Intent has a level that determines its protection and processing pipeline.","s":"tutorial/intent-levels"},{"t":"Inter-Service Communication","d":"Services communicate through the message bus using Intents, not HTTP.","s":"tutorial/messaging"},{"t":"Native IOP","d":"Full control with explicit Intent management. No sugar — just the IOP model.","s":"tutorial/native-iop"},{"t":"Parallel Execution","d":"Run multiple Intents concurrently for faster responses.","s":"tutorial/parallel"},{"t":"Path Parameters","d":"Extract dynamic values from URL paths.","s":"tutorial/path-params"},{"t":"Pipeline Extensions","d":"Add cross-cutting concerns (logging, rate limiting, caching) without modifying handlers.","s":"tutorial/pipeline-extensions"},{"t":"Request Body","d":"Handle POST, PUT, and PATCH request data.","s":"tutorial/request-body"}];
+
+  window.__searchIndex = searchIndex;
+
+  function openSearch() {
+    var overlay = document.getElementById('search-overlay');
+    var input = document.getElementById('search-input');
+    overlay && overlay.classList.add('open');
+    input && input.focus();
+  }
+
+  function closeSearch() {
+    var overlay = document.getElementById('search-overlay');
+    overlay && overlay.classList.remove('open');
+    var input = document.getElementById('search-input');
+    if (input) input.value = '';
+    var results = document.getElementById('search-results');
+    if (results) results.innerHTML = '<p class="search-empty">Type to search...</p>';
+  }
+
+  function doSearch(query) {
+    var idx = window.__searchIndex || [];
+    if (!query) return idx;
+    var q = query.toLowerCase();
+    return idx.filter(function(item) {
+      return item.t.toLowerCase().indexOf(q) !== -1 ||
+             item.d.toLowerCase().indexOf(q) !== -1 ||
+             item.s.toLowerCase().indexOf(q) !== -1;
+    });
+  }
+
+  function highlightMatch(text, query) {
+    if (!query) return text;
+    var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+    return text.replace(re, '<mark>$1</mark>');
+  }
+
+  // Wire navbar search button
+  document.getElementById('docs-search-btn').addEventListener('click', openSearch);
+
+  document.getElementById('search-overlay').addEventListener('click', function(e) {
+    if (e.target === e.currentTarget) closeSearch();
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+      e.preventDefault();
+      var overlay = document.getElementById('search-overlay');
+      if (overlay && overlay.classList.contains('open')) {
+        closeSearch();
+      } else {
+        openSearch();
+      }
+    }
+    if (e.key === 'Escape') closeSearch();
+  });
+
+  document.getElementById('search-input').addEventListener('input', function(e) {
+    var query = e.target.value.trim();
+    var resultsEl = document.getElementById('search-results');
+    if (!resultsEl) return;
+
+    if (!query) {
+      resultsEl.innerHTML = '<p class="search-empty">Type to search...</p>';
+      return;
+    }
+
+    var results = doSearch(query);
+
+    if (results.length === 0) {
+      resultsEl.innerHTML = '<p class="search-empty">No results found.</p>';
+      return;
+    }
+
+    resultsEl.innerHTML = results.map(function(item) {
+      return '<a href="/EVOID/docs/' + item.s + '/" class="search-result">' +
+        '<div class="search-result-title">' + highlightMatch(item.t, query) + '</div>' +
+        '<div class="search-result-excerpt">' + highlightMatch(item.d, query) + '</div>' +
+      '</a>';
+    }).join('');
+  });
+})();</script><div class="docs-layout" data-astro-cid-zfittpdt><aside class="docs-sidebar" id="docs-sidebar"><div class="sidebar-header"><button class="sidebar-close" id="sidebar-close" aria-label="Close sidebar"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"></path></svg></button></div><nav class="sidebar-nav"><div class="sidebar-card "><button class="sidebar-card-header" aria-expanded="false"><span>Getting Started</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"></path></svg></button><ul class="sidebar-card-items"><li><a href="/docs/getting-started/installation/" class="sidebar-link "><span>Installation</span></a></li><li><a href="/docs/getting-started/quickstart/" class="sidebar-link "><span>Quick Start</span></a></li><li><a href="/docs/getting-started/why-evoid/" class="sidebar-link "><span>Why EVOID?</span></a></li><li><a href="/docs/getting-started/what-is-iop/" class="sidebar-link "><span>What is IOP?</span></a></li></ul></div><div class="sidebar-card "><button class="sidebar-card-header" aria-expanded="false"><span>Learn</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"></path></svg></button><ul class="sidebar-card-items"><li><a href="/docs/learn/intent/" class="sidebar-link "><span>Intent</span></a></li><li><a href="/docs/learn/pipeline/" class="sidebar-link "><span>Pipeline</span></a></li><li><a href="/docs/learn/processors/" class="sidebar-link "><span>Processors</span></a></li><li><a href="/docs/learn/plugins/" class="sidebar-link "><span>Plugins</span></a></li><li><a href="/docs/learn/configuration/" class="sidebar-link "><span>Configuration</span></a></li></ul></div><div class="sidebar-card "><button class="sidebar-card-header" aria-expanded="false"><span>Syntax Styles</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"></path></svg></button><ul class="sidebar-card-items"><li><a href="/docs/styles/route/" class="sidebar-link "><span>@route</span></a></li><li><a href="/docs/styles/controller/" class="sidebar-link "><span>@controller</span></a></li><li><a href="/docs/styles/native/" class="sidebar-link "><span>Native</span></a></li></ul></div><div class="sidebar-card "><button class="sidebar-card-header" aria-expanded="false"><span>Tutorial</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"></path></svg></button><ul class="sidebar-card-items"><li><a href="/docs/tutorial/first-steps/" class="sidebar-link "><span class="step-num">01</span><span>First Steps</span></a></li><li><a href="/docs/tutorial/path-params/" class="sidebar-link "><span class="step-num">02</span><span>Path Parameters</span></a></li><li><a href="/docs/tutorial/request-body/" class="sidebar-link "><span class="step-num">03</span><span>Request Body</span></a></li><li><a href="/docs/tutorial/intent-levels/" class="sidebar-link "><span class="step-num">04</span><span>Intent Levels</span></a></li><li><a href="/docs/tutorial/pipeline-extensions/" class="sidebar-link "><span class="step-num">05</span><span>Pipeline Extensions</span></a></li><li><a href="/docs/tutorial/parallel/" class="sidebar-link "><span class="step-num">06</span><span>Parallel Execution</span></a></li><li><a href="/docs/tutorial/messaging/" class="sidebar-link "><span class="step-num">07</span><span>Inter-Service Communication</span></a></li><li><a href="/docs/tutorial/custom-processors/" class="sidebar-link "><span class="step-num">08</span><span>Custom Processors</span></a></li><li><a href="/docs/tutorial/controller-style/" class="sidebar-link "><span class="step-num">09</span><span>Controller Style</span></a></li><li><a href="/docs/tutorial/native-iop/" class="sidebar-link "><span class="step-num">10</span><span>Native IOP</span></a></li></ul></div><a href="/docs/api/" class="sidebar-link standalone ">API Reference</a><a href="/docs/examples/" class="sidebar-link standalone active">Examples</a></nav></aside><div class="sidebar-overlay" id="sidebar-overlay"></div><script type="module">document.querySelectorAll(`.sidebar-card-header`).forEach(e=>{e.addEventListener(`click`,()=>{let t=e.closest(`.sidebar-card`),n=e.getAttribute(`aria-expanded`)===`true`;e.setAttribute(`aria-expanded`,String(!n)),t?.classList.toggle(`collapsed`)})}),document.querySelectorAll(`.sidebar-card:not(.active)`).forEach(e=>{e.classList.add(`collapsed`),e.querySelector(`.sidebar-card-header`)?.setAttribute(`aria-expanded`,`false`)});</script><main class="docs-content" data-astro-cid-zfittpdt><article class="docs-article" data-astro-cid-zfittpdt><h1 id="examples">Examples</h1>
+<p>Working examples that demonstrate EVOID features. All examples are in the <code>examples/</code> directory.</p>
+<h2 id="minimal-api">Minimal API</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> evoid.web.route </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> Service, get</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">app </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> Service(</span><span style="color:#9ECBFF">"minimal"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">@get</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">async</span><span style="color:#F97583"> def</span><span style="color:#B392F0"> home</span><span style="color:#E1E4E8">() -> </span><span style="color:#79B8FF">dict</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#E1E4E8"> {</span><span style="color:#9ECBFF">"message"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"Hello from EVOID!"</span><span style="color:#E1E4E8">}</span></span></code></pre>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">evo</span><span style="color:#9ECBFF"> service</span><span style="color:#9ECBFF"> run</span><span style="color:#9ECBFF"> minimal</span></span>
+<span class="line"><span style="color:#B392F0">curl</span><span style="color:#9ECBFF"> http://localhost:8000/</span></span>
+<span class="line"><span style="color:#6A737D"># {"message": "Hello from EVOID!"}</span></span></code></pre>
+<h2 id="crud-service">CRUD Service</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> evoid.web.route </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> Service, get, post, put, delete</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">app </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> Service(</span><span style="color:#9ECBFF">"users"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">users: list[</span><span style="color:#79B8FF">dict</span><span style="color:#E1E4E8">] </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> []</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">@get</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/users"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">async</span><span style="color:#F97583"> def</span><span style="color:#B392F0"> list_users</span><span style="color:#E1E4E8">() -> </span><span style="color:#79B8FF">dict</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#E1E4E8"> {</span><span style="color:#9ECBFF">"users"</span><span style="color:#E1E4E8">: users}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">@get</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/users/</span><span style="color:#79B8FF">{user_id}</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">async</span><span style="color:#F97583"> def</span><span style="color:#B392F0"> get_user</span><span style="color:#E1E4E8">(user_id: </span><span style="color:#79B8FF">int</span><span style="color:#E1E4E8">) -> </span><span style="color:#79B8FF">dict</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#F97583">    for</span><span style="color:#E1E4E8"> u </span><span style="color:#F97583">in</span><span style="color:#E1E4E8"> users:</span></span>
+<span class="line"><span style="color:#F97583">        if</span><span style="color:#E1E4E8"> u[</span><span style="color:#9ECBFF">"id"</span><span style="color:#E1E4E8">] </span><span style="color:#F97583">==</span><span style="color:#E1E4E8"> user_id:</span></span>
+<span class="line"><span style="color:#F97583">            return</span><span style="color:#E1E4E8"> u</span></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#E1E4E8"> {</span><span style="color:#9ECBFF">"error"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"not found"</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">@post</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/users"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">async</span><span style="color:#F97583"> def</span><span style="color:#B392F0"> create_user</span><span style="color:#E1E4E8">(name: </span><span style="color:#79B8FF">str</span><span style="color:#E1E4E8">, email: </span><span style="color:#79B8FF">str</span><span style="color:#E1E4E8">) -> </span><span style="color:#79B8FF">dict</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">    user </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> {</span><span style="color:#9ECBFF">"id"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">len</span><span style="color:#E1E4E8">(users) </span><span style="color:#F97583">+</span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"name"</span><span style="color:#E1E4E8">: name, </span><span style="color:#9ECBFF">"email"</span><span style="color:#E1E4E8">: email}</span></span>
+<span class="line"><span style="color:#E1E4E8">    users.append(user)</span></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#E1E4E8"> user</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">@delete</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/users/</span><span style="color:#79B8FF">{user_id}</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">async</span><span style="color:#F97583"> def</span><span style="color:#B392F0"> delete_user</span><span style="color:#E1E4E8">(user_id: </span><span style="color:#79B8FF">int</span><span style="color:#E1E4E8">) -> </span><span style="color:#79B8FF">dict</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#F97583">    global</span><span style="color:#E1E4E8"> users</span></span>
+<span class="line"><span style="color:#E1E4E8">    users </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> [u </span><span style="color:#F97583">for</span><span style="color:#E1E4E8"> u </span><span style="color:#F97583">in</span><span style="color:#E1E4E8"> users </span><span style="color:#F97583">if</span><span style="color:#E1E4E8"> u[</span><span style="color:#9ECBFF">"id"</span><span style="color:#E1E4E8">] </span><span style="color:#F97583">!=</span><span style="color:#E1E4E8"> user_id]</span></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#E1E4E8"> {</span><span style="color:#9ECBFF">"status"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"deleted"</span><span style="color:#E1E4E8">}</span></span></code></pre>
+<h2 id="intent-levels">Intent Levels</h2>
+<p>Different protection levels for different data.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> evoid.web.route </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> Service, get, post</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">app </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> Service(</span><span style="color:#9ECBFF">"levels"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">@get</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/cache-me"</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">level</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"ephemeral"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">async</span><span style="color:#F97583"> def</span><span style="color:#B392F0"> cache_me</span><span style="color:#E1E4E8">() -> </span><span style="color:#79B8FF">dict</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#E1E4E8"> {</span><span style="color:#9ECBFF">"cached"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">True</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">@get</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/users/</span><span style="color:#79B8FF">{id}</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">level</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"standard"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">async</span><span style="color:#F97583"> def</span><span style="color:#B392F0"> get_user</span><span style="color:#E1E4E8">(id: </span><span style="color:#79B8FF">int</span><span style="color:#E1E4E8">) -> </span><span style="color:#79B8FF">dict</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#E1E4E8"> {</span><span style="color:#9ECBFF">"id"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">id</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">@post</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/payments"</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">level</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"critical"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">async</span><span style="color:#F97583"> def</span><span style="color:#B392F0"> process_payment</span><span style="color:#E1E4E8">(amount: </span><span style="color:#79B8FF">float</span><span style="color:#E1E4E8">) -> </span><span style="color:#79B8FF">dict</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#E1E4E8"> {</span><span style="color:#9ECBFF">"status"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"paid"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"amount"</span><span style="color:#E1E4E8">: amount}</span></span></code></pre>
+<h2 id="pipeline-extensions">Pipeline Extensions</h2>
+<p>Cross-cutting concerns without touching handlers.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> evoid.web.route </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> Service, get, before, after</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">app </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> Service(</span><span style="color:#9ECBFF">"extended"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">@get</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/users/</span><span style="color:#79B8FF">{id}</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">async</span><span style="color:#F97583"> def</span><span style="color:#B392F0"> get_user</span><span style="color:#E1E4E8">(id: </span><span style="color:#79B8FF">int</span><span style="color:#E1E4E8">) -> </span><span style="color:#79B8FF">dict</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#E1E4E8"> {</span><span style="color:#9ECBFF">"id"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">id</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">before(</span><span style="color:#9ECBFF">"GET:/users/</span><span style="color:#79B8FF">{id}</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"rate_limit"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">after(</span><span style="color:#9ECBFF">"GET:/users/</span><span style="color:#79B8FF">{id}</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"log_response"</span><span style="color:#E1E4E8">)</span></span></code></pre>
+<h2 id="parallel-execution">Parallel Execution</h2>
+<p>Run multiple intents concurrently.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> evoid </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> Intent, Level, gather, add_intent</span></span>
+<span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> evoid.web.route </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> Service, get</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">app </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> Service(</span><span style="color:#9ECBFF">"parallel"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#79B8FF">USER_API</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> Intent(</span><span style="color:#FFAB70">name</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"fetch_users"</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">level</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">Level.</span><span style="color:#79B8FF">STANDARD</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#79B8FF">ORDER_API</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> Intent(</span><span style="color:#FFAB70">name</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"fetch_orders"</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">level</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">Level.</span><span style="color:#79B8FF">STANDARD</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">async</span><span style="color:#F97583"> def</span><span style="color:#B392F0"> fetch_users</span><span style="color:#E1E4E8">(intent: Intent) -> </span><span style="color:#79B8FF">list</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#E1E4E8"> [{</span><span style="color:#9ECBFF">"id"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8">}, {</span><span style="color:#9ECBFF">"id"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">2</span><span style="color:#E1E4E8">}]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">async</span><span style="color:#F97583"> def</span><span style="color:#B392F0"> fetch_orders</span><span style="color:#E1E4E8">(intent: Intent) -> </span><span style="color:#79B8FF">list</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#E1E4E8"> [{</span><span style="color:#9ECBFF">"order_id"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">101</span><span style="color:#E1E4E8">}, {</span><span style="color:#9ECBFF">"order_id"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">102</span><span style="color:#E1E4E8">}]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">add_intent(</span><span style="color:#79B8FF">USER_API</span><span style="color:#E1E4E8">, fetch_users)</span></span>
+<span class="line"><span style="color:#E1E4E8">add_intent(</span><span style="color:#79B8FF">ORDER_API</span><span style="color:#E1E4E8">, fetch_orders)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">@get</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/dashboard"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">async</span><span style="color:#F97583"> def</span><span style="color:#B392F0"> dashboard</span><span style="color:#E1E4E8">() -> </span><span style="color:#79B8FF">dict</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">    results </span><span style="color:#F97583">=</span><span style="color:#F97583"> await</span><span style="color:#E1E4E8"> gather(</span><span style="color:#79B8FF">USER_API</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">ORDER_API</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#9ECBFF">        "users"</span><span style="color:#E1E4E8">: results[</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">].value,</span></span>
+<span class="line"><span style="color:#9ECBFF">        "orders"</span><span style="color:#E1E4E8">: results[</span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8">].value,</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span></code></pre>
+<h2 id="inter-service-communication">Inter-Service Communication</h2>
+<p>Services talking through the message bus.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> evoid </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> Intent, Level, subscribe, publish</span></span>
+<span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> evoid.native </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> create_service, on, run</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">payment_service </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> create_service(</span><span style="color:#9ECBFF">"payments"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#79B8FF">PAYMENT_INTENT</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> Intent(</span><span style="color:#FFAB70">name</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"process_payment"</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">level</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">Level.</span><span style="color:#79B8FF">CRITICAL</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">async</span><span style="color:#F97583"> def</span><span style="color:#B392F0"> handle_payment</span><span style="color:#E1E4E8">(intent: Intent) -> </span><span style="color:#79B8FF">dict</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">    amount </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> intent.metadata.get(</span><span style="color:#9ECBFF">"amount"</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#E1E4E8"> {</span><span style="color:#9ECBFF">"status"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"paid"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"amount"</span><span style="color:#E1E4E8">: amount}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">on(payment_service, </span><span style="color:#79B8FF">PAYMENT_INTENT</span><span style="color:#E1E4E8">, handle_payment)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">async</span><span style="color:#F97583"> def</span><span style="color:#B392F0"> notify_on_payment</span><span style="color:#E1E4E8">(intent: Intent) -> </span><span style="color:#79B8FF">None</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#79B8FF">    print</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">f</span><span style="color:#9ECBFF">"Payment of </span><span style="color:#79B8FF">{</span><span style="color:#E1E4E8">intent.metadata.get(</span><span style="color:#9ECBFF">'amount'</span><span style="color:#E1E4E8">)</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF"> received!"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">subscribe(</span><span style="color:#9ECBFF">"process_payment"</span><span style="color:#E1E4E8">, notify_on_payment)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">await</span><span style="color:#E1E4E8"> run(payment_service, </span><span style="color:#FFAB70">port</span><span style="color:#F97583">=</span><span style="color:#79B8FF">8001</span><span style="color:#E1E4E8">)</span></span></code></pre>
+<h2 id="controller-style">Controller Style</h2>
+<p>Class-based grouping for larger APIs.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> evoid.web.controller </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> Service, Controller, </span><span style="color:#79B8FF">GET</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">POST</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">app </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> Service(</span><span style="color:#9ECBFF">"shop"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">@Controller</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/products"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> ProductController</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#B392F0">    @GET</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">    async</span><span style="color:#F97583"> def</span><span style="color:#B392F0"> list_products</span><span style="color:#E1E4E8">(self) -> </span><span style="color:#79B8FF">dict</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#E1E4E8"> {</span><span style="color:#9ECBFF">"products"</span><span style="color:#E1E4E8">: []}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">    @GET</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/</span><span style="color:#79B8FF">{id}</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">    async</span><span style="color:#F97583"> def</span><span style="color:#B392F0"> get_product</span><span style="color:#E1E4E8">(self, id: </span><span style="color:#79B8FF">int</span><span style="color:#E1E4E8">) -> </span><span style="color:#79B8FF">dict</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#E1E4E8"> {</span><span style="color:#9ECBFF">"id"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">id</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"name"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"Widget"</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">    @POST</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">    async</span><span style="color:#F97583"> def</span><span style="color:#B392F0"> create_product</span><span style="color:#E1E4E8">(self, name: </span><span style="color:#79B8FF">str</span><span style="color:#E1E4E8">, price: </span><span style="color:#79B8FF">float</span><span style="color:#E1E4E8">) -> </span><span style="color:#79B8FF">dict</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#E1E4E8"> {</span><span style="color:#9ECBFF">"status"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"created"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"name"</span><span style="color:#E1E4E8">: name}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">@Controller</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/orders"</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">level</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"critical"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> OrderController</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#B392F0">    @POST</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">    async</span><span style="color:#F97583"> def</span><span style="color:#B392F0"> create_order</span><span style="color:#E1E4E8">(self, product_id: </span><span style="color:#79B8FF">int</span><span style="color:#E1E4E8">, quantity: </span><span style="color:#79B8FF">int</span><span style="color:#E1E4E8">) -> </span><span style="color:#79B8FF">dict</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#E1E4E8"> {</span><span style="color:#9ECBFF">"status"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"ordered"</span><span style="color:#E1E4E8">}</span></span></code></pre>
+<h2 id="native-iop">Native IOP</h2>
+<p>Full control with explicit intent management.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> evoid </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> Intent, Level, add_intent, execute_by_name</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#79B8FF">SEARCH</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> Intent(</span></span>
+<span class="line"><span style="color:#FFAB70">    name</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"search"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#FFAB70">    level</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">Level.</span><span style="color:#79B8FF">STANDARD</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#FFAB70">    metadata</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#9ECBFF">"timeout"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">30</span><span style="color:#E1E4E8">},</span></span>
+<span class="line"><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">async</span><span style="color:#F97583"> def</span><span style="color:#B392F0"> handle_search</span><span style="color:#E1E4E8">(intent: Intent) -> </span><span style="color:#79B8FF">dict</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">    query </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> intent.metadata.get(</span><span style="color:#9ECBFF">"query"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">""</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#E1E4E8"> {</span><span style="color:#9ECBFF">"results"</span><span style="color:#E1E4E8">: [</span><span style="color:#F97583">f</span><span style="color:#9ECBFF">"Result for '</span><span style="color:#79B8FF">{</span><span style="color:#E1E4E8">query</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF">'"</span><span style="color:#E1E4E8">]}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">add_intent(</span><span style="color:#79B8FF">SEARCH</span><span style="color:#E1E4E8">, handle_search)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">result </span><span style="color:#F97583">=</span><span style="color:#F97583"> await</span><span style="color:#E1E4E8"> execute_by_name(</span><span style="color:#9ECBFF">"search"</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">query</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"hello"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#79B8FF">print</span><span style="color:#E1E4E8">(result.value)</span></span>
+<span class="line"><span style="color:#6A737D"># {"results": ["Result for 'hello'"]}</span></span></code></pre>
+<h2 id="custom-processor">Custom Processor</h2>
+<p>Write a processor and inject it into any pipeline.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> evoid </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> Intent, Level, add_intent</span></span>
+<span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> evoid.core </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> Context, register_processor</span></span>
+<span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> evoid.core.extend </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> before</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">async</span><span style="color:#F97583"> def</span><span style="color:#B392F0"> timing_processor</span><span style="color:#E1E4E8">(ctx: Context) -> </span><span style="color:#79B8FF">dict</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#F97583">    import</span><span style="color:#E1E4E8"> time</span></span>
+<span class="line"><span style="color:#E1E4E8">    ctx.state[</span><span style="color:#9ECBFF">"start_time"</span><span style="color:#E1E4E8">] </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> time.monotonic()</span></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#E1E4E8"> {</span><span style="color:#9ECBFF">"timing_started"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">True</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">register_processor(</span><span style="color:#9ECBFF">"timing"</span><span style="color:#E1E4E8">, timing_processor)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#79B8FF">PAYMENT</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> Intent(</span><span style="color:#FFAB70">name</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"pay"</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">level</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">Level.</span><span style="color:#79B8FF">CRITICAL</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">async</span><span style="color:#F97583"> def</span><span style="color:#B392F0"> handle_pay</span><span style="color:#E1E4E8">(intent: Intent) -> </span><span style="color:#79B8FF">dict</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#E1E4E8"> {</span><span style="color:#9ECBFF">"paid"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">True</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">add_intent(</span><span style="color:#79B8FF">PAYMENT</span><span style="color:#E1E4E8">, handle_pay)</span></span>
+<span class="line"><span style="color:#E1E4E8">before(</span><span style="color:#9ECBFF">"pay"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"timing"</span><span style="color:#E1E4E8">)</span></span></code></pre>
+<h2 id="message-bus-pubsub">Message Bus Pub/Sub</h2>
+<p>Decoupled communication between components.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> evoid </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> Intent, Level, subscribe, publish</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">async</span><span style="color:#F97583"> def</span><span style="color:#B392F0"> on_order_created</span><span style="color:#E1E4E8">(intent: Intent) -> </span><span style="color:#79B8FF">None</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#79B8FF">    print</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">f</span><span style="color:#9ECBFF">"Order </span><span style="color:#79B8FF">{</span><span style="color:#E1E4E8">intent.metadata.get(</span><span style="color:#9ECBFF">'order_id'</span><span style="color:#E1E4E8">)</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF"> created"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">async</span><span style="color:#F97583"> def</span><span style="color:#B392F0"> on_order_shipped</span><span style="color:#E1E4E8">(intent: Intent) -> </span><span style="color:#79B8FF">None</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#79B8FF">    print</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">f</span><span style="color:#9ECBFF">"Order </span><span style="color:#79B8FF">{</span><span style="color:#E1E4E8">intent.metadata.get(</span><span style="color:#9ECBFF">'order_id'</span><span style="color:#E1E4E8">)</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF"> shipped"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">subscribe(</span><span style="color:#9ECBFF">"order_created"</span><span style="color:#E1E4E8">, on_order_created)</span></span>
+<span class="line"><span style="color:#E1E4E8">subscribe(</span><span style="color:#9ECBFF">"order_shipped"</span><span style="color:#E1E4E8">, on_order_shipped)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">order </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> Intent(</span></span>
+<span class="line"><span style="color:#FFAB70">    name</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"order_created"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#FFAB70">    level</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">Level.</span><span style="color:#79B8FF">STANDARD</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#FFAB70">    metadata</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#9ECBFF">"order_id"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">42</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"total"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">99.99</span><span style="color:#E1E4E8">},</span></span>
+<span class="line"><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">await</span><span style="color:#E1E4E8"> publish(order)</span></span></code></pre>
+<h2 id="error-handling">Error Handling</h2>
+<p>Graceful error handling in pipelines.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> evoid </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> Intent, Level, execute</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">async</span><span style="color:#F97583"> def</span><span style="color:#B392F0"> main</span><span style="color:#E1E4E8">():</span></span>
+<span class="line"><span style="color:#E1E4E8">    intent </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> Intent(</span><span style="color:#FFAB70">name</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"get_user"</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">level</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">Level.</span><span style="color:#79B8FF">STANDARD</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">    result </span><span style="color:#F97583">=</span><span style="color:#F97583"> await</span><span style="color:#E1E4E8"> execute(intent)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#E1E4E8"> result.success:</span></span>
+<span class="line"><span style="color:#79B8FF">        print</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">f</span><span style="color:#9ECBFF">"Value: </span><span style="color:#79B8FF">{</span><span style="color:#E1E4E8">result.value</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">    else</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#79B8FF">        print</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">f</span><span style="color:#9ECBFF">"Failed after </span><span style="color:#79B8FF">{len</span><span style="color:#E1E4E8">(result.processors)</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF"> processors"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#79B8FF">        print</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">f</span><span style="color:#9ECBFF">"Error: </span><span style="color:#79B8FF">{</span><span style="color:#E1E4E8">result.error</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#79B8FF">        print</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">f</span><span style="color:#9ECBFF">"Duration: </span><span style="color:#79B8FF">{</span><span style="color:#E1E4E8">result.duration</span><span style="color:#F97583">:.3f</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF">s"</span><span style="color:#E1E4E8">)</span></span></code></pre>
+<h2 id="configuration">Configuration</h2>
+<p>Swap infrastructure by changing config.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="toml"><code><span class="line"><span style="color:#6A737D"># evoid.toml</span></span>
+<span class="line"><span style="color:#E1E4E8">[</span><span style="color:#B392F0">engines</span><span style="color:#E1E4E8">]</span></span>
+<span class="line"><span style="color:#E1E4E8">schema = </span><span style="color:#9ECBFF">"native"</span></span>
+<span class="line"><span style="color:#E1E4E8">storage = </span><span style="color:#9ECBFF">"sqlite"</span></span>
+<span class="line"><span style="color:#E1E4E8">cache = </span><span style="color:#9ECBFF">"memory"</span></span>
+<span class="line"><span style="color:#E1E4E8">serializer = </span><span style="color:#9ECBFF">"json"</span></span>
+<span class="line"><span style="color:#E1E4E8">logger = </span><span style="color:#9ECBFF">"loguru"</span></span></code></pre>
+<p>Switch to PostgreSQL:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="toml"><code><span class="line"><span style="color:#E1E4E8">[</span><span style="color:#B392F0">engines</span><span style="color:#E1E4E8">]</span></span>
+<span class="line"><span style="color:#E1E4E8">storage = </span><span style="color:#9ECBFF">"postgres"</span></span></code></pre>
+<p>Then run <code>evo sync</code> to install the new dependency.</p></article><nav class="docs-nav"><div class="docs-nav-inner"><a href="/docs/api/" class="docs-nav-link docs-nav-prev"><span class="docs-nav-label">← Previous</span><span class="docs-nav-title">API Reference</span></a><div class="docs-nav-divider"></div><div></div></div></nav></main><aside class="docs-toc"><nav class="toc-nav"><p class="toc-title">On this page</p><ul><li class="toc-depth-2"><a href="#minimal-api" class="toc-link">Minimal API</a></li><li class="toc-depth-2"><a href="#crud-service" class="toc-link">CRUD Service</a></li><li class="toc-depth-2"><a href="#intent-levels" class="toc-link">Intent Levels</a></li><li class="toc-depth-2"><a href="#pipeline-extensions" class="toc-link">Pipeline Extensions</a></li><li class="toc-depth-2"><a href="#parallel-execution" class="toc-link">Parallel Execution</a></li><li class="toc-depth-2"><a href="#inter-service-communication" class="toc-link">Inter-Service Communication</a></li><li class="toc-depth-2"><a href="#controller-style" class="toc-link">Controller Style</a></li><li class="toc-depth-2"><a href="#native-iop" class="toc-link">Native IOP</a></li><li class="toc-depth-2"><a href="#custom-processor" class="toc-link">Custom Processor</a></li><li class="toc-depth-2"><a href="#message-bus-pubsub" class="toc-link">Message Bus Pub/Sub</a></li><li class="toc-depth-2"><a href="#error-handling" class="toc-link">Error Handling</a></li><li class="toc-depth-2"><a href="#configuration" class="toc-link">Configuration</a></li></ul></nav></aside></div><script type="module">document.getElementById(`docs-hamburger`)?.addEventListener(`click`,()=>{document.getElementById(`docs-sidebar`)?.classList.toggle(`open`),document.getElementById(`sidebar-overlay`)?.classList.toggle(`open`)}),document.getElementById(`sidebar-overlay`)?.addEventListener(`click`,()=>{document.getElementById(`docs-sidebar`)?.classList.remove(`open`),document.getElementById(`sidebar-overlay`)?.classList.remove(`open`)}),document.getElementById(`docs-theme-toggle`)?.addEventListener(`click`,()=>{let e=document.documentElement,t=e.getAttribute(`data-theme`)===`dark`?`light`:`dark`;e.setAttribute(`data-theme`,t),localStorage.setItem(`theme`,t)});</script><script>
+      (function() {
+        var stored = localStorage.getItem('theme');
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var theme = stored || (prefersDark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script><script type="module">document.addEventListener(`astro:page-load`,e),document.addEventListener(`DOMContentLoaded`,e);function e(){document.querySelectorAll(`.tabs`).forEach(e=>{let t=e.querySelectorAll(`.tab-btn`),n=e.querySelectorAll(`.tab-panel`);t.forEach(r=>{r.addEventListener(`click`,()=>{let i=r.getAttribute(`data-tab`);t.forEach(e=>e.classList.remove(`active`)),n.forEach(e=>e.classList.remove(`active`)),r.classList.add(`active`),e.querySelector(`#`+CSS.escape(i))?.classList.add(`active`)})})})}</script></body></html>

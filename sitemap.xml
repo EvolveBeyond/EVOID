@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://evolvebeyond.github.io/EVOID/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://evolvebeyond.github.io/EVOID/docs/api/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://evolvebeyond.github.io/EVOID/docs/examples/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://evolvebeyond.github.io/EVOID/docs/getting-started/installation/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://evolvebeyond.github.io/EVOID/docs/getting-started/quickstart/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://evolvebeyond.github.io/EVOID/docs/getting-started/what-is-iop/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://evolvebeyond.github.io/EVOID/docs/getting-started/why-evoid/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://evolvebeyond.github.io/EVOID/docs/learn/configuration/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://evolvebeyond.github.io/EVOID/docs/learn/intent/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://evolvebeyond.github.io/EVOID/docs/learn/pipeline/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://evolvebeyond.github.io/EVOID/docs/learn/plugins/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://evolvebeyond.github.io/EVOID/docs/learn/processors/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://evolvebeyond.github.io/EVOID/docs/styles/controller/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://evolvebeyond.github.io/EVOID/docs/styles/native/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://evolvebeyond.github.io/EVOID/docs/styles/route/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://evolvebeyond.github.io/EVOID/docs/tutorial/controller-style/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://evolvebeyond.github.io/EVOID/docs/tutorial/custom-processors/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://evolvebeyond.github.io/EVOID/docs/tutorial/first-steps/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://evolvebeyond.github.io/EVOID/docs/tutorial/intent-levels/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://evolvebeyond.github.io/EVOID/docs/tutorial/messaging/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://evolvebeyond.github.io/EVOID/docs/tutorial/native-iop/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://evolvebeyond.github.io/EVOID/docs/tutorial/parallel/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://evolvebeyond.github.io/EVOID/docs/tutorial/path-params/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://evolvebeyond.github.io/EVOID/docs/tutorial/pipeline-extensions/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://evolvebeyond.github.io/EVOID/docs/tutorial/request-body/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+</urlset>
