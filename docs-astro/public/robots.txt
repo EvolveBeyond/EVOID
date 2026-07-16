@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://evolvebeyond.github.io/EVOID/sitemap.xml
