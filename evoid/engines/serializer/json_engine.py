@@ -6,7 +6,7 @@ IOP: Fallback serializer. Works everywhere.
 from __future__ import annotations
 
 import json
-from datetime import datetime, date, time
+from datetime import date, datetime, time
 from decimal import Decimal
 from typing import Any
 from uuid import UUID

@@ -18,10 +18,11 @@ my-project/
 
 from __future__ import annotations
 
-import tomli_w
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
+
+import tomli_w
 
 try:
     import tomli

@@ -7,7 +7,6 @@ from __future__ import annotations
 
 from typing import Any
 
-
 # Module-level state — simple dict
 _store: dict[str, Any] = {}
 

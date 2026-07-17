@@ -7,7 +7,6 @@ from __future__ import annotations
 
 from typing import Any
 
-
 # Dependencies: name -> instance
 _container: dict[str, Any] = {}
 

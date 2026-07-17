@@ -12,11 +12,11 @@ from __future__ import annotations
 
 import json
 import time
-from typing import Any, Callable, Awaitable
+from collections.abc import Awaitable, Callable
+from typing import Any
 
 from ..core.intent import Intent, Level
 from ..core.runtime import execute
-
 
 # Handler type: takes Intent, returns result
 Handler = Callable[[Intent], Awaitable[Any]]

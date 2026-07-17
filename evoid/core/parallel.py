@@ -11,14 +11,14 @@ Users can:
 from __future__ import annotations
 
 import asyncio
+from collections.abc import Awaitable, Callable
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
-from typing import Any, Callable, Awaitable
+from typing import Any
 
-from .intent import Intent, Level
+from .intent import Intent
 from .pipeline import Result
 from .runtime import execute as execute_intent
-
 
 # ============================================================
 # Parallel execution

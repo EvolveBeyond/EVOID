@@ -6,13 +6,12 @@ IOP: Adapter is just functions. No class with behavior.
 from __future__ import annotations
 
 import json
-import time
+from collections.abc import Awaitable, Callable
 from dataclasses import dataclass, field
-from typing import Any, Callable, Awaitable
+from typing import Any
 
 from ..core.intent import Intent, Level
 from ..core.runtime import execute
-
 
 # Handler type
 Handler = Callable[[Intent], Awaitable[Any]]
@@ -131,7 +130,7 @@ def run_app(
 ) -> None:
     """Run the Robyn application."""
     try:
-        from robyn import Robyn, Request, Response
+        from robyn import Request, Response, Robyn
     except ImportError:
         raise ImportError("robyn required: pip install robyn")
 

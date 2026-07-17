@@ -6,12 +6,12 @@ IOP: Adapter is just functions. No class with behavior.
 from __future__ import annotations
 
 import json
+from collections.abc import Awaitable, Callable
 from dataclasses import dataclass, field
-from typing import Any, Callable, Awaitable
+from typing import Any
 
 from ..core.intent import Intent, Level
 from ..core.runtime import execute
-
 
 # Handler type
 Handler = Callable[[Intent], Awaitable[Any]]
@@ -67,8 +67,8 @@ def create_asgi_app(ws_app: WebSocketApp) -> Any:
         from starlette.applications import Starlette
         from starlette.requests import Request
         from starlette.responses import JSONResponse
-        from starlette.websockets import WebSocket, WebSocketDisconnect
         from starlette.routing import Route, WebSocketRoute
+        from starlette.websockets import WebSocket, WebSocketDisconnect
     except ImportError:
         raise ImportError("starlette required: pip install starlette")
 

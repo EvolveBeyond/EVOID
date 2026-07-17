@@ -8,11 +8,11 @@ No HTTP overhead. Intent-based routing.
 from __future__ import annotations
 
 import asyncio
+from collections.abc import Awaitable, Callable
 from dataclasses import dataclass, field
-from typing import Any, Awaitable, Callable
+from typing import Any
 
-from .intent import Intent, Level
-
+from .intent import Intent
 
 # Message types
 Handler = Callable[[Intent], Awaitable[Any]]

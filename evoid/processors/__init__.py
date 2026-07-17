@@ -12,12 +12,12 @@ Available processors:
 - logger_processor: Logs pipeline execution
 """
 
-from .intent_extractor import process as intent_extractor
-from .schema_validator import process as schema_validator
 from .auth_checker import process as auth_checker
-from .rate_limiter import process as rate_limiter
 from .circuit_breaker import process as circuit_breaker
+from .intent_extractor import process as intent_extractor
 from .logger_processor import process as logger_processor
+from .rate_limiter import process as rate_limiter
+from .schema_validator import process as schema_validator
 
 __all__ = [
     "intent_extractor",

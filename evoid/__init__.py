@@ -10,66 +10,70 @@ __version__ = "0.3.3"
 
 # Core
 from .core import (
+    Config,
+    Context,
     Intent,
     Level,
-    register,
-    resolve,
-    all_intents,
-    clear_registry,
-    PipelineConfig,
-    resolve_pipeline,
-    Result,
-    execute_pipeline,
-    Context,
-    fork,
-    Processor,
-    register_processor,
-    get_processor,
-    all_processors,
-    Config,
-    execute,
-    execute_by_name,
     # Message Bus
     Message,
-    subscribe,
-    unsubscribe,
-    publish,
-    get_history,
+    PipelineConfig,
+    Processor,
+    Result,
     # Service
     Service,
+    all_intents,
+    all_processors,
+    clear_registry,
+    execute,
+    execute_by_name,
+    execute_pipeline,
+    fork,
+    get_history,
+    get_processor,
+    publish,
+    register,
+    register_processor,
+    resolve,
+    resolve_pipeline,
+    subscribe,
+    unsubscribe,
 )
 
 # Extend
 from .core.extend import (
     add_intent,
     add_intent_with_pipeline,
-    before,
     after,
-    before_processor,
     after_processor,
-    replace_pipeline,
-    remove_processor,
+    before,
+    before_processor,
+    clear_overrides,
     get_pipeline_config,
     list_overrides,
-    clear_overrides,
+    remove_processor,
+    replace_pipeline,
 )
 
 # Parallel
 from .core.parallel import (
+    IntentQueue,
     gather,
     gather_with_priority,
     parallel,
     run_in_thread,
     run_in_thread_async,
-    IntentQueue,
 )
 
 # Native (IOP mother syntax)
 from .native import (
     Service as NativeService,
+)
+from .native import (
     create_service,
-    on as native_on,
     execute_service,
+)
+from .native import (
+    on as native_on,
 )
 
 __all__ = [

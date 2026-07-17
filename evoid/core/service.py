@@ -7,10 +7,10 @@ No class with behavior — just data and functions.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Callable, Awaitable
+from typing import Any
 
-from .intent import Intent, Level
-from .message_bus import subscribe, publish, Handler
+from .intent import Intent
+from .message_bus import Handler, publish, subscribe
 
 
 @dataclass

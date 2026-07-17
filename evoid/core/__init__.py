@@ -4,13 +4,16 @@ No classes with behavior. No inheritance. No stateful objects.
 Just data carrying intent, and functions composing pipelines.
 """
 
-from .intent import Intent, Level, register, resolve, all_intents, clear_registry
-from .resolver import PipelineConfig, resolve_pipeline
-from .pipeline import Result, execute as execute_pipeline
 from .context import Context, fork
-from .processor import Processor, register as register_processor, get as get_processor, all_processors
+from .intent import Intent, Level, all_intents, clear_registry, register, resolve
+from .message_bus import Message, get_history, publish, subscribe, unsubscribe
+from .pipeline import Result
+from .pipeline import execute as execute_pipeline
+from .processor import Processor, all_processors
+from .processor import get as get_processor
+from .processor import register as register_processor
+from .resolver import PipelineConfig, resolve_pipeline
 from .runtime import Config, execute, execute_by_name
-from .message_bus import Message, subscribe, unsubscribe, publish, get_history
 from .service import Service
 
 __all__ = [

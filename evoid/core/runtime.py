@@ -11,10 +11,11 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from .context import Context
-from .intent import Intent, resolve as resolve_intent
-from .pipeline import Result, execute as execute_pipeline
-from .processor import Processor, all_processors
-from .resolver import PipelineConfig, resolve_pipeline
+from .intent import Intent
+from .intent import resolve as resolve_intent
+from .pipeline import Result
+from .pipeline import execute as execute_pipeline
+from .processor import all_processors
 
 
 @dataclass

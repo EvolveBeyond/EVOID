@@ -8,7 +8,6 @@ from __future__ import annotations
 import time
 from typing import Any
 
-
 # Cache entries: key -> (value, expiry_time)
 _cache: dict[str, tuple[Any, float | None]] = {}
 _max_size: int = 1000

@@ -8,7 +8,6 @@ from __future__ import annotations
 import time
 from typing import Any
 
-
 # Metrics storage
 _counters: dict[str, int] = {}
 _timers: dict[str, list[float]] = {}

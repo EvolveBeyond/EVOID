@@ -9,6 +9,9 @@ from __future__ import annotations
 from typing import Any
 
 from ...contracts.schema import SchemaEngine
+from .native import deserialize as _deserialize
+from .native import serialize as _serialize
+from .native import validate as _validate
 
 _validator: SchemaEngine | None = None
 
@@ -31,7 +34,6 @@ def get_validator() -> SchemaEngine:
     except ImportError:
         pass
 
-    from .native import validate, serialize, deserialize
     return _NativeValidator()
 
 
@@ -51,10 +53,10 @@ class _NativeValidator:
     """Wrapper for native functions to match SchemaEngine protocol."""
 
     def validate(self, data: Any, schema: type) -> Any:
-        return validate(data, schema)
+        return _validate(data, schema)
 
     def serialize(self, obj: Any) -> dict[str, Any]:
-        return serialize(obj)
+        return _serialize(obj)
 
     def deserialize(self, data: dict[str, Any], schema: type) -> Any:
-        return deserialize(data, schema)
+        return _deserialize(data, schema)

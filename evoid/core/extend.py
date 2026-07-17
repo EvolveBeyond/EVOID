@@ -12,12 +12,12 @@ Users can:
 
 from __future__ import annotations
 
-from typing import Any, Callable, Awaitable
+from collections.abc import Callable
 
-from .intent import Intent, Level, register as register_intent
-from .processor import Processor, register as register_processor
-from .resolver import PipelineConfig, resolve_pipeline, _DEFAULT_PROCESSORS
-
+from .intent import Intent, Level
+from .intent import register as register_intent
+from .processor import register as register_processor
+from .resolver import _DEFAULT_PROCESSORS, PipelineConfig, resolve_pipeline
 
 # ============================================================
 # 1. Add new Intent to a service

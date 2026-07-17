@@ -5,12 +5,12 @@ IOP: Adapter is just functions. No class with behavior.
 
 from __future__ import annotations
 
+from collections.abc import Awaitable, Callable
 from dataclasses import dataclass, field
-from typing import Any, Callable, Awaitable
+from typing import Any
 
 from ..core.intent import Intent, Level
 from ..core.runtime import execute
-
 
 # Handler type
 Handler = Callable[[Intent], Awaitable[Any]]
@@ -90,5 +90,5 @@ async def run_bot(bot: TelegramBot) -> None:
             if pipeline_result.success and pipeline_result.value:
                 await message.answer(str(pipeline_result.value))
 
-    print(f"Starting Telegram bot...")
+    print("Starting Telegram bot...")
     await dp.start_polling(_bot)

@@ -9,7 +9,7 @@ import importlib
 from pathlib import Path
 from typing import Any
 
-from .registry import register, Plugin
+from .registry import Plugin, register
 
 
 def from_config(config: dict[str, Any]) -> list[Plugin]:

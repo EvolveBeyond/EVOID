@@ -10,7 +10,6 @@ from typing import Any
 
 from ..core.context import Context
 
-
 # Circuit breaker state: service_name -> (state, failure_count, last_failure)
 _states: dict[str, tuple[str, int, float]] = {}
 

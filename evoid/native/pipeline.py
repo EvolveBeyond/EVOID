@@ -36,8 +36,9 @@ class WebPipeline:
             await self._run_asgi(h, p)
 
     async def _run_asgi(self, host: str, port: int) -> None:
-        from ..adapters.asgi import create_app
         import uvicorn
+
+        from ..adapters.asgi import create_app
 
         handlers = {}
         for intent in self.service.intents:

@@ -6,8 +6,7 @@ IOP: Just dicts and functions. No classes with behavior.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Protocol, Callable, Awaitable
-
+from typing import Any
 
 # Plugin types
 PluginType = str  # "adapter", "engine", "language", "processor"

@@ -6,8 +6,6 @@ Just implement the Serializer protocol and register it.
 
 from __future__ import annotations
 
-from typing import Any
-
 from ...contracts.serializer import Serializer
 
 # Global registry

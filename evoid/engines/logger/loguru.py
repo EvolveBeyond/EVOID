@@ -132,7 +132,6 @@ def request(method: str, path: str, status: int, duration: float) -> None:
     Beautiful formatted log like:
     2026-07-14 12:00:00.000 | INFO     | POST /payments 200 (0.003s)
     """
-    color = "green" if 200 <= status < 400 else "red" if status >= 400 else "yellow"
     msg = f"{method} {path} {status} ({duration:.3f}s)"
 
     if _HAS_LOGURU:

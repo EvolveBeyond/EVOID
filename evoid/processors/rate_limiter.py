@@ -6,10 +6,8 @@ IOP: Pure function. Simple in-memory rate limiting.
 from __future__ import annotations
 
 import time
-from typing import Any
 
 from ..core.context import Context
-
 
 # Rate limit state: key -> (count, window_start)
 _rate_limits: dict[str, tuple[int, float]] = {}

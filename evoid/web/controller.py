@@ -10,20 +10,27 @@ Extend support:
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-from typing import Any, Callable, Awaitable
+from collections.abc import Awaitable, Callable
+from dataclasses import dataclass
+from typing import Any
 
-from ..core.intent import Intent, Level
-from ..core import register, register_processor, Context
+from ..core import Context, register, register_processor
+from ..core.extend import (
+    after as _after,
+)
+from ..core.extend import (
+    after_processor as _after_processor,
+)
 from ..core.extend import (
     before as _before,
-    after as _after,
+)
+from ..core.extend import (
     before_processor as _before_processor,
-    after_processor as _after_processor,
+)
+from ..core.extend import (
     replace_pipeline as _replace_pipeline,
 )
-from ..native import Service  # IOP mother syntax
-
+from ..core.intent import Intent, Level
 
 # Handler type
 Handler = Callable[..., Awaitable[Any]]

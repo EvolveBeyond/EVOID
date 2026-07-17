@@ -7,10 +7,9 @@ from __future__ import annotations
 
 import subprocess
 import sys
-from pathlib import Path
 
-from .loader import load as load_config
 from .deps import get_packages_for_config
+from .loader import load as load_config
 
 
 def sync(config_path: str = "evoid.toml") -> bool:

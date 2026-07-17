@@ -16,13 +16,13 @@ Web features live in evoid.web (route, controller, pipeline).
 
 from __future__ import annotations
 
+from collections.abc import Awaitable, Callable
 from dataclasses import dataclass, field
-from typing import Any, Callable, Awaitable
+from typing import Any
 
-from ..core.intent import Intent, Level
-from ..core import register, register_processor, Context
+from ..core import register, register_processor
+from ..core.intent import Intent, Level  # noqa: F401 — re-exported for users
 from ..core.runtime import execute as _execute
-
 
 # Handler type: takes Intent, returns result
 Handler = Callable[[Intent], Awaitable[Any]]
@@ -65,7 +65,7 @@ async def run(service: Service, host: str = "0.0.0.0", port: int = 8000) -> None
     Auto-detects: FastAPI/Starlette (ASGI) or Robyn.
     For explicit adapter choice, use evoid.native.pipeline directly.
     """
-    from .pipeline import detect, create_web_pipeline
+    from .pipeline import create_web_pipeline
 
     pipeline = create_web_pipeline(service)
     await pipeline.run(host=host, port=port)

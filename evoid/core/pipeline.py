@@ -78,7 +78,7 @@ async def execute(
                 output_state=context.state.copy() if inspect else {},
                 success=True,
             ))
-        except asyncio.TimeoutError:
+        except TimeoutError:
             steps.append(ProcessorResult(
                 name=name,
                 duration=time.monotonic() - step_start,

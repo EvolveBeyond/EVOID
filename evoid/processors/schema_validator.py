@@ -5,8 +5,6 @@ IOP: Pure function. Uses schema engine from context deps.
 
 from __future__ import annotations
 
-from typing import Any
-
 from ..core.context import Context
 
 
