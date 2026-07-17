@@ -23,19 +23,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-          cache-dependency-path: docs/docs-astro/package-lock.json
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
 
       - name: Install dependencies
-        run: npm ci
+        run: bun install
         working-directory: docs/docs-astro
 
       - name: Build
-        run: npm run build
+        run: bun run build
         working-directory: docs/docs-astro
 
       - name: Upload artifact
