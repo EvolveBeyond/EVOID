@@ -10,7 +10,8 @@ Sandy gets a website. First @route endpoint, what happens under the hood.
 ## The First Web Endpoint
 
 ```python
-from evoid.web.route import Service, get
+from evoid.adapters.asgi import get
+from evoid.web.route import Service
 
 app = Service("sandy-api")
 
@@ -78,7 +79,8 @@ curl http://localhost:8000/menu
 ## More Endpoints
 
 ```python
-from evoid.web.route import Service, get, post
+from evoid.adapters.asgi import get, post
+from evoid.web.route import Service
 
 app = Service("sandy-api")
 

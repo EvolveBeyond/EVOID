@@ -141,11 +141,12 @@ async def process_upload(ctx: Context) -> dict:
 ## @route Style
 
 ```python
-from evoid.web.route import Service, post, before
+from evoid.adapters.asgi import post
+from evoid.web.route import Service, before
 
 app = Service("api")
 
-@app.post("/upload")
+@post("/upload")
 async def upload() -> dict:
     files = ctx.metadata.get("files", {})
     return {"uploaded": len(files)}

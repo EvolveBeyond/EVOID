@@ -10,7 +10,8 @@ Full CRUD for Sandy's menu — path parameters, body updates, validation.
 ## Complete Menu CRUD
 
 ```python
-from evoid.web.route import Service, get, post, put, delete
+from evoid.adapters.asgi import get, post, put, delete
+from evoid.web.route import Service
 
 app = Service("sandy-api")
 

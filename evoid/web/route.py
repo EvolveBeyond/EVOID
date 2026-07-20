@@ -1,11 +1,16 @@
-"""@route Syntax — Function-based routes, IOP underneath.
+"""@route Syntax — Function-based routes, re-exported from adapter.
 
-IOP: Decorators auto-create Intents from route path + method.
-User just writes @get("/path") — Intent is created automatically.
+IOP: Route decorators (get, post, put, delete) live in the adapter
+layer because param extraction is adapter-specific. This module
+re-exports them for convenience.
+
+Primary import:
+    from evoid.adapters.asgi import get, post      # explicit adapter
+    from evoid.web.route import get, post           # convenience (same thing)
 
 Extend support:
-  before("GET:/users/{id}", "log_request")
-  after("GET:/users/{id}", "log_response")
+    before("GET:/users/{id}", "log_request")
+    after("GET:/users/{id}", "log_response")
 """
 
 from __future__ import annotations
@@ -14,7 +19,10 @@ from collections.abc import Awaitable, Callable
 from dataclasses import dataclass
 from typing import Any
 
-from ..core import Context, register, register_processor
+from ..adapters.asgi import delete as delete  # noqa: F811 — re-export from adapter
+from ..adapters.asgi import get as get  # noqa: F811 — re-export from adapter
+from ..adapters.asgi import post as post  # noqa: F811 — re-export from adapter
+from ..adapters.asgi import put as put  # noqa: F811 — re-export from adapter
 from ..core.extend import (
     after as _after,
 )
@@ -30,8 +38,6 @@ from ..core.extend import (
 from ..core.extend import (
     replace_pipeline as _replace_pipeline,
 )
-from ..core.intent import Intent
-from ._shared import create_intent as _create_intent
 
 # Handler type
 Handler = Callable[..., Awaitable[Any]]
@@ -39,73 +45,17 @@ Handler = Callable[..., Awaitable[Any]]
 
 @dataclass
 class App:
-    """App — pure data (name)."""
+    """App — pure data (name).
+
+    Name container for @route syntax. The adapter does the real work:
+    converts HTTP requests to Intents and routes them through the pipeline.
+    """
 
     name: str
 
 
-def get(path: str, level: str = "standard") -> Callable:
-    """GET endpoint — auto-creates Intent."""
-    def decorator(func: Handler) -> Handler:
-        intent = _create_intent("GET", path, level)
-        register(intent)
-
-        async def processor(ctx: Context) -> Any:
-            params = ctx.metadata.get("params", {})
-            return await func(**params)
-
-        register_processor(intent.name, processor)
-        func._evoid_intent = intent
-        return func
-    return decorator
-
-
-def post(path: str, level: str = "standard") -> Callable:
-    """POST endpoint — auto-creates Intent."""
-    def decorator(func: Handler) -> Handler:
-        intent = _create_intent("POST", path, level)
-        register(intent)
-
-        async def processor(ctx: Context) -> Any:
-            body = ctx.metadata.get("body", {})
-            return await func(**body)
-
-        register_processor(intent.name, processor)
-        func._evoid_intent = intent
-        return func
-    return decorator
-
-
-def put(path: str, level: str = "standard") -> Callable:
-    """PUT endpoint — auto-creates Intent."""
-    def decorator(func: Handler) -> Handler:
-        intent = _create_intent("PUT", path, level)
-        register(intent)
-
-        async def processor(ctx: Context) -> Any:
-            body = ctx.metadata.get("body", {})
-            return await func(**body)
-
-        register_processor(intent.name, processor)
-        func._evoid_intent = intent
-        return func
-    return decorator
-
-
-def delete(path: str, level: str = "standard") -> Callable:
-    """DELETE endpoint — auto-creates Intent."""
-    def decorator(func: Handler) -> Handler:
-        intent = _create_intent("DELETE", path, level)
-        register(intent)
-
-        async def processor(ctx: Context) -> Any:
-            params = ctx.metadata.get("params", {})
-            return await func(**params)
-
-        register_processor(intent.name, processor)
-        func._evoid_intent = intent
-        return func
-    return decorator
+# Alias: README and user code import as "Service"
+Service = App
 
 
 # ============================================================
@@ -158,7 +108,7 @@ def replace_pipeline(route: str, processors: list[str]) -> None:
 
 
 async def run(app: App, host: str = "0.0.0.0", port: int = 8000) -> None:
-    """Run the @route app."""
+    """Run the @route app via ASGI adapter."""
     from ..adapters.asgi import create_app
 
     asgi_app = create_app(name=app.name)

@@ -98,11 +98,12 @@ async def rate_limiter(ctx: Context) -> dict:
 ## @route Style
 
 ```python
-from evoid.web.route import Service, get, before
+from evoid.adapters.asgi import get
+from evoid.web.route import Service, before
 
 app = Service("api")
 
-@app.get("/data")
+@get("/data")
 async def get_data() -> dict:
     return {"data": [1, 2, 3]}
 

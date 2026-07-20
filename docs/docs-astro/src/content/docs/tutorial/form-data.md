@@ -138,11 +138,12 @@ async def create_user(ctx: Context) -> dict:
 ## @route Style
 
 ```python
-from evoid.web.route import Service, post, before
+from evoid.adapters.asgi import post
+from evoid.web.route import Service, before
 
 app = Service("api")
 
-@app.post("/register")
+@post("/register")
 async def register(username: str, email: str, password: str) -> dict:
     return {"status": "created", "username": username}
 

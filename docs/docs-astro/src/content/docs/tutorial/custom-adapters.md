@@ -122,11 +122,12 @@ async def run_adapter(adapter, raw_event):
 Both decorator styles auto-create intents — the adapter just needs to pass the request through:
 
 ```python
-from evoid.web.route import Service, get, post, run
+from evoid.adapters.asgi import get, post
+from evoid.web.route import Service, run
 
 app = Service("my-api")
 
-@app.get("/users/{user_id}")
+@get("/users/{user_id}")
 async def get_user(user_id: int) -> dict:
     return {"id": user_id}
 

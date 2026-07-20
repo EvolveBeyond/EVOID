@@ -97,11 +97,12 @@ If using the processor approach, you need an `after` processor to attach headers
 
 ```python
 from evoid.core import Context
-from evoid.web.route import Service, get, before, after
+from evoid.adapters.asgi import get
+from evoid.web.route import Service, before, after
 
 app = Service("api")
 
-@app.get("/users")
+@get("/users")
 async def get_users() -> dict:
     return {"users": []}
 

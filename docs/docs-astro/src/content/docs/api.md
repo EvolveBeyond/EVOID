@@ -685,7 +685,8 @@ Fire-and-forget. Publishes to all subscribers without waiting.
 ## @route Style
 
 ```python
-from evoid.web.route import Service, get, post, put, delete
+from evoid.adapters.asgi import get, post, put, delete
+from evoid.web.route import Service
 
 app = Service(name: str) -> App
 get(path: str, level: str = "standard") -> Callable

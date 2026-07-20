@@ -145,13 +145,14 @@ app = Starlette(
 ## @route Style
 
 ```python
-from evoid.web.route import Service, get, run
+from evoid.adapters.asgi import get
+from evoid.web.route import Service, run
 from starlette.routing import Mount
 from starlette.staticfiles import StaticFiles
 
 app = Service("my-api")
 
-@app.get("/api/data")
+@get("/api/data")
 async def get_data() -> dict:
     return {"data": [1, 2, 3]}
 

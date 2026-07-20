@@ -92,11 +92,12 @@ async def auth_check(ctx: Context) -> dict:
 
 
 # @route style
-from evoid.web.route import Service, get, before
+from evoid.adapters.asgi import get
+from evoid.web.route import Service, before
 
 app = Service("api")
 
-@app.get("/dashboard")
+@get("/dashboard")
 async def dashboard() -> dict:
     return {"content": "Welcome back!"}
 

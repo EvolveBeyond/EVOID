@@ -6,6 +6,10 @@ This adapter creates a Starlette/ASGI app that:
 2. Converts to Intent
 3. Executes through pipeline
 4. Returns response
+
+Route decorators (get, post, put, delete) live HERE because
+param extraction is adapter-specific. Each adapter decides how
+to pull params from its request type.
 """
 
 from __future__ import annotations
@@ -15,6 +19,7 @@ import time
 from collections.abc import Awaitable, Callable
 from typing import Any
 
+from ..core import Context, register, register_processor
 from ..core.intent import Intent, Level
 from ..core.runtime import execute
 
@@ -173,3 +178,81 @@ def run(
     app = create_app(name=name, handlers=handlers, port=port)
     print(f"Starting {name} on http://{host}:{port}")
     uvicorn.run(app, host=host, port=port)
+
+
+# ============================================================
+# Route decorators — adapter-specific
+# ============================================================
+
+def _create_intent(method: str, path: str, level: str = "standard") -> Intent:
+    """Create Intent from HTTP method + path."""
+    intent_level = Level(level) if level in ("ephemeral", "standard", "critical") else Level.STANDARD
+    return Intent(
+        name=f"{method.upper()}:{path}",
+        level=intent_level,
+        metadata={"method": method, "path": path},
+    )
+
+
+def get(path: str, level: str = "standard") -> Callable:
+    """GET route — creates Intent, registers ASGI handler."""
+    def decorator(func: Handler) -> Handler:
+        intent = _create_intent("GET", path, level)
+        register(intent)
+
+        async def processor(ctx: Context) -> Any:
+            params = ctx.metadata.get("params", {})
+            return await func(**params)
+
+        register_processor(intent.name, processor)
+        func._evoid_intent = intent
+        return func
+    return decorator
+
+
+def post(path: str, level: str = "standard") -> Callable:
+    """POST route — creates Intent, registers ASGI handler."""
+    def decorator(func: Handler) -> Handler:
+        intent = _create_intent("POST", path, level)
+        register(intent)
+
+        async def processor(ctx: Context) -> Any:
+            body = ctx.metadata.get("body", {})
+            return await func(**body)
+
+        register_processor(intent.name, processor)
+        func._evoid_intent = intent
+        return func
+    return decorator
+
+
+def put(path: str, level: str = "standard") -> Callable:
+    """PUT route — creates Intent, registers ASGI handler."""
+    def decorator(func: Handler) -> Handler:
+        intent = _create_intent("PUT", path, level)
+        register(intent)
+
+        async def processor(ctx: Context) -> Any:
+            body = ctx.metadata.get("body", {})
+            return await func(**body)
+
+        register_processor(intent.name, processor)
+        func._evoid_intent = intent
+        return func
+    return decorator
+
+
+def delete(path: str, level: str = "standard") -> Callable:
+    """DELETE route — creates Intent, registers ASGI handler."""
+    def decorator(func: Handler) -> Handler:
+        intent = _create_intent("DELETE", path, level)
+        register(intent)
+
+        async def processor(ctx: Context) -> Any:
+            params = ctx.metadata.get("params", {})
+            return await func(**params)
+
+        register_processor(intent.name, processor)
+        func._evoid_intent = intent
+        return func
+    return decorator

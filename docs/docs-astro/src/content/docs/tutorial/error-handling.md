@@ -92,7 +92,8 @@ async def validate_optional(intent: Intent, ctx: Context) -> dict:
 ## Custom Error Responses
 
 ```python
-from evoid.web.route import Service, get
+from evoid.adapters.asgi import get
+from evoid.web.route import Service
 
 app = Service("sandy-api")
 

@@ -12,7 +12,10 @@ How EVOID works under the hood.
 Every request follows this path:
 
 ```
-User Code (@route / @controller / native)
+External Event (HTTP, CLI, Telegram, WebSocket, ...)
+        |
+        v
+   Adapter (converts event → Intent)
         |
         v
    Intent (frozen dataclass)
@@ -28,7 +31,12 @@ User Code (@route / @controller / native)
         |
         v
    Result (success, value, error, duration)
+        |
+        v
+   Adapter (converts result → response)
 ```
+
+Adapters bridge the outside world to EVOID. Route decorators (`get`, `post`, etc.) live in adapters because each one extracts params differently. See [Adapters](/EVOID/learn/adapters) for details.
 
 ## Core Components
 

@@ -71,7 +71,8 @@ replace_pipeline("GET:/users/{id}", ["cache", "fetch_user", "log"])
 The solution: inject processors before or after specific routes:
 
 ```python
-from evoid.web.route import Service, get, before, after
+from evoid.adapters.asgi import get
+from evoid.web.route import Service, before, after
 
 app = Service("api")
 

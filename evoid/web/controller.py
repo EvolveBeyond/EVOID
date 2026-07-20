@@ -39,9 +39,18 @@ Handler = Callable[..., Awaitable[Any]]
 
 @dataclass
 class App:
-    """App — pure data (name)."""
+    """App — pure data (name).
+
+    This is a name container for @controller syntax. The real execution
+    happens in the adapter layer (ASGI/Robyn) which converts HTTP
+    requests to Intents and routes them through the pipeline.
+    """
 
     name: str
+
+
+# Alias: README and user code import as "Service"
+Service = App
 
 
 def Controller(prefix: str = "", level: str = "standard") -> Callable:

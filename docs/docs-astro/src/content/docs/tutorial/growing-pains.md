@@ -67,7 +67,8 @@ This is where Level 2 (TypedDict + @route) comes in:
 Here's what Phase 2 looks like:
 
 ```python
-from evoid.web.route import Service, get, post
+from evoid.adapters.asgi import get, post
+from evoid.web.route import Service
 
 app = Service("sandy-api")
 

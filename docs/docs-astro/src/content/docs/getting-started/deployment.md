@@ -101,7 +101,8 @@ server {
 ## Health Check
 
 ```python
-from evoid.web.route import Service, get
+from evoid.adapters.asgi import get
+from evoid.web.route import Service
 
 app = Service("my-api")
 

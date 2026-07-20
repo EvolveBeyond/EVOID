@@ -42,7 +42,8 @@ This creates `services/api/main.py`.
 Edit `services/api/main.py`:
 
 ```python
-from evoid.web.route import Service, get, post
+from evoid.adapters.asgi import get, post
+from evoid.web.route import Service
 
 app = Service("my-api")
 

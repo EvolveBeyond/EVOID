@@ -10,7 +10,8 @@ Function-based syntax. Familiar if you've used FastAPI or Flask. Intents are cre
 ## Basic Usage
 
 ```python
-from evoid.web.route import Service, get, post, put, delete
+from evoid.adapters.asgi import get, post, put, delete
+from evoid.web.route import Service
 
 app = Service("my-api")
 

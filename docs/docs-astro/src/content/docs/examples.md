@@ -10,7 +10,8 @@ Working examples that demonstrate EVOID features. All examples are in the `examp
 ## Minimal API
 
 ```python
-from evoid.web.route import Service, get
+from evoid.adapters.asgi import get
+from evoid.web.route import Service
 
 app = Service("minimal")
 
@@ -28,7 +29,8 @@ curl http://localhost:8000/
 ## CRUD Service
 
 ```python
-from evoid.web.route import Service, get, post, put, delete
+from evoid.adapters.asgi import get, post, put, delete
+from evoid.web.route import Service
 
 app = Service("users")
 users: list[dict] = []
@@ -62,7 +64,8 @@ async def delete_user(user_id: int) -> dict:
 Different protection levels for different data.
 
 ```python
-from evoid.web.route import Service, get, post
+from evoid.adapters.asgi import get, post
+from evoid.web.route import Service
 
 app = Service("levels")
 
@@ -84,7 +87,8 @@ async def process_payment(amount: float) -> dict:
 Cross-cutting concerns without touching handlers.
 
 ```python
-from evoid.web.route import Service, get, before, after
+from evoid.adapters.asgi import get
+from evoid.web.route import Service, before, after
 
 app = Service("extended")
 
@@ -102,7 +106,8 @@ Run multiple intents concurrently.
 
 ```python
 from evoid import Intent, Level, gather, add_intent
-from evoid.web.route import Service, get
+from evoid.adapters.asgi import get
+from evoid.web.route import Service
 
 app = Service("parallel")
 

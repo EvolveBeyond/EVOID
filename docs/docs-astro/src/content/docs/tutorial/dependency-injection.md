@@ -141,7 +141,8 @@ register_processor("inject_cache", inject_cache)
 `@route` decorators auto-create Intents. Use `ctx` for injected dependencies:
 
 ```python
-from evoid.web.route import Service, get, post
+from evoid.adapters.asgi import get, post
+from evoid.web.route import Service
 
 app = Service("api")
 

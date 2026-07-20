@@ -45,6 +45,7 @@ export const sidebar: SidebarEntry[] = [
       { label: 'Plugin Ecosystem', slug: 'learn/plugin-ecosystem' },
       { label: 'Plugin Collection', slug: 'learn/plugin-collection' },
       { label: 'Plugin Standard', slug: 'learn/plugin-standard' },
+      { label: 'Adapters', slug: 'learn/adapters' },
       { label: 'Testing', slug: 'learn/testing' },
       { label: 'Configuration', slug: 'learn/configuration' },
       { label: 'Python-Native Config', slug: 'learn/python-config' },

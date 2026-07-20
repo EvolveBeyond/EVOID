@@ -84,7 +84,8 @@ case = tc(GET_USER)
 
 ```python
 from evoid.testing import tc
-from evoid.web.route import Service, get
+from evoid.adapters.asgi import get
+from evoid.web.route import Service
 
 app = Service("test-api")
 

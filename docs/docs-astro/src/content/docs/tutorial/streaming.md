@@ -109,11 +109,12 @@ async def stream_data(ctx: Context) -> list[dict]:
 ## @route Style with Streaming
 
 ```python
-from evoid.web.route import Service, get
+from evoid.adapters.asgi import get
+from evoid.web.route import Service
 
 app = Service("api")
 
-@app.get("/events")
+@get("/events")
 async def get_events() -> list[dict]:
     return [{"event": "connected"}, {"event": "data", "value": 42}]
 ```

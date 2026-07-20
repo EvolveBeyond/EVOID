@@ -19,8 +19,9 @@
 <p align="center">
   <a href="#what-is-iop">What is IOP?</a> •
   <a href="#quick-start">Quick Start</a> •
+  <a href="#adapters">Adapters</a> •
   <a href="#features">Features</a> •
-  <a href="#documentation">Docs</a> •
+  <a href="https://evolvebeyond.github.io/EVOID/">Docs</a> •
   <a href="https://pypi.org/project/evoid/">PyPI</a>
 </p>
 
@@ -31,20 +32,20 @@
 **Intent-Oriented Programming** — your data declares what it needs, the runtime handles how.
 
 ```python
-from evoid.web.route import Service, get, post
+from evoid.native import create_service, on
+from evoid import Intent, Level
 
-app = Service("my-api")
+app = create_service("my-api")
 
-@get("/users/{user_id}")
-async def get_user(user_id: int) -> dict:
-    return {"id": user_id, "name": "Alice"}
+GET_USER = Intent(name="get_user", level=Level.STANDARD)
 
-@post("/payments", level="critical")
-async def process_payment(amount: float) -> dict:
-    return {"status": "paid", "amount": amount}
+async def get_user(intent: Intent) -> dict:
+    return {"id": 1, "name": "Alice"}
+
+on(app, GET_USER, get_user)
 ```
 
-Three intent levels control infrastructure:
+Three intent levels control infrastructure automatically:
 
 | Level | Pipeline | Use Case |
 |:------|:---------|:---------|
@@ -54,13 +55,38 @@ Three intent levels control infrastructure:
 
 ---
 
-## Install
+## How It Works
+
+EVOID is a **runtime**, not a framework. Adapters bridge the outside world:
+
+```
+External Event (HTTP, CLI, Telegram, WebSocket, ...)
+        |
+   Adapter converts event → Intent
+        |
+   Runtime executes Intent through Pipeline
+        |
+   Pipeline runs Processors (validate, authorize, audit, ...)
+        |
+   Result returned to Adapter → converted back to response
+```
+
+**Adapters** provide route decorators and event conversion. **Services** are Intent + handler registrations. **Pipelines** are processor chains chosen by intent level.
+
+See [How It Works](https://evolvebeyond.github.io/EVOID/getting-started/architecture/) for the full picture.
+
+---
+
+## Quick Start
 
 ```bash
 uv add evoid
+evo init my-api && cd my-api
+evo service new api && evo service run api
+# http://0.0.0.0:8000
 ```
 
-**Zero core dependencies** — add only what you need:
+Or install optional engines:
 
 ```bash
 evo install sqlite      # SQLite storage
@@ -71,26 +97,17 @@ evo install full        # Everything
 
 ---
 
-## Quick Start
-
-```bash
-evo init my-api
-cd my-api
-evo service new api
-evo service run api
-# Server starts at http://0.0.0.0:8000
-```
-
----
-
 ## Three Syntax Styles
 
 All IOP underneath. Pick your style:
 
-### @route
+### @route (function-based)
+
+Route decorators come from the adapter. Switch adapters, same code:
 
 ```python
-from evoid.web.route import Service, get
+from evoid.adapters.asgi import get, post
+from evoid.web.route import Service
 
 app = Service("my-api")
 
@@ -99,7 +116,9 @@ async def get_user(user_id: int) -> dict:
     return {"id": user_id, "name": "Alice"}
 ```
 
-### @controller
+### @controller (class-based)
+
+`@GET`, `@POST` mark routes. `@Controller` creates Intents from them:
 
 ```python
 from evoid.web.controller import Service, Controller, GET, POST
@@ -113,18 +132,39 @@ class UserController:
         return {"id": user_id}
 ```
 
-### Native
+### Native (full control)
+
+Explicit Intent creation. Adapter-agnostic — works with any transport:
 
 ```python
-from evoid import Intent, Level, add_intent
+from evoid.native import create_service, on
+from evoid import Intent, Level
+
+app = create_service("my-api")
 
 GET_USER = Intent(name="get_user", level=Level.STANDARD)
 
-async def handler(intent: Intent) -> dict:
+async def get_user(intent: Intent) -> dict:
     return {"id": 1, "name": "Alice"}
 
-add_intent(GET_USER, handler)
+on(app, GET_USER, get_user)
 ```
+
+---
+
+## Adapters
+
+Each adapter converts its event type to Intents. Route decorators live in adapters because param extraction is adapter-specific:
+
+| Adapter | Decorators | Install |
+|:--------|:-----------|:--------|
+| **ASGI** (HTTP) | `@get(path)`, `@post(path)` | `evoid[asgi]` |
+| **Robyn** | `@get(app, path)`, `@post(app, path)` | `evoid[robyn]` |
+| **Telegram** | `on(bot, event, handler)` | `evoid[telegram]` |
+| **CLI** | `intent_from_args(cmd)` | built-in |
+| **MCP** (AI agents) | `create_mcp_server(name)` | built-in |
+
+See [Adapters](https://evolvebeyond.github.io/EVOID/learn/adapters/) for details and examples.
 
 ---
 
@@ -181,13 +221,33 @@ Full async/await support
 <td>
 
 **Parallel Execution**
-Concurrent intents
+gather, parallel, IntentQueue
 
 </td>
 <td>
 
 **Multi-Adapter**
-ASGI, CLI, Telegram, WebSocket
+ASGI, CLI, Telegram, WebSocket, MCP
+
+</td>
+</tr>
+<tr>
+<td>
+
+**Storage Engines**
+Memory, SQLite, Redis, Postgres
+
+</td>
+<td>
+
+**Cache Engine**
+LRU with TTL, Redis backend
+
+</td>
+<td>
+
+**Extend Pipelines**
+before/after processors, pipeline override
 
 </td>
 </tr>
@@ -201,10 +261,7 @@ ASGI, CLI, Telegram, WebSocket
 from evoid import export_schemas
 from evoid.adapters.mcp import create_mcp_server
 
-# Export schemas for AI discovery
 schemas = export_schemas()
-
-# Create MCP server
 server = create_mcp_server("my-api")
 ```
 
@@ -258,26 +315,10 @@ def test_get_user():
 ```
 
 ```bash
-pytest tests/ -v
-pytest tests/ --evoid-webui    # With dashboard
+pytest tests/ -v                    # Run tests
+pytest tests/ --evoid-webui         # With dashboard
+pytest tests/ --evoid-inspect       # With pipeline traces
 ```
-
----
-
-## CLI Reference
-
-| Command | Alias | Description |
-|:--------|:------|:------------|
-| `evo init <name>` | `i` | Create project |
-| `evo service new <name>` | `s new` | Add service |
-| `evo service run <name>` | `s run` | Run service |
-| `evo run` | `r` | Run all |
-| `evo serve` | `sv` | Quick serve |
-| `evo exec <intent>` | `e` | Execute intent |
-| `evo install <pkg>` | `ins` | Install dep |
-| `evo plug install <name>` | `pl i` | Install plugin |
-| `evo plug search <query>` | `pl s` | Search plugins |
-| `evo version` | `v` | Version |
 
 ---
 
@@ -285,20 +326,33 @@ pytest tests/ --evoid-webui    # With dashboard
 
 ```
 my-api/
-  evoid_config.py       # Python config
-  shared/               # Shared code
+  evoid.toml              # TOML config (or evoid_config.py)
+  shared/                 # Shared code
   services/
     api/
-      main.py           # Service code
+      main.py             # Service code
+```
+
+### Package Layout
+
+```
+evoid/
+  core/          Intent, Pipeline, Context, Runtime, Events, MessageBus
+  native/        IOP mother syntax (create_service, on)
+  web/           @route and @controller syntax
+  adapters/      asgi, cli, telegram, websocket, mcp, robyn
+  engines/       storage, cache, auth, di, logger, metrics, schema, serializer
+  processors/    Built-in processors (validate, authorize, etc.)
+  config/        TOML + Python config loading
+  testing/       pytest plugin + WebUI dashboard
+  project/       Project scaffolding
 ```
 
 ---
 
 ## Documentation
 
-**User docs:** [https://evolvebeyond.github.io/EVOID/](https://evolvebeyond.github.io/EVOID/)
-
-**Wiki:** [https://github.com/EvolveBeyond/EVOID/wiki](https://github.com/EvolveBeyond/EVOID/wiki)
+**Full docs:** [https://evolvebeyond.github.io/EVOID/](https://evolvebeyond.github.io/EVOID/)
 
 **Architecture:** [https://deepwiki.com/EvolveBeyond/EVOID](https://deepwiki.com/EvolveBeyond/EVOID)
 

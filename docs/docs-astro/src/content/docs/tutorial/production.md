@@ -90,7 +90,8 @@ async def monitor(intent: Intent) -> dict:
 Add a health endpoint for load balancers and monitoring:
 
 ```python
-from evoid.web.route import Service, get
+from evoid.adapters.asgi import get
+from evoid.web.route import Service
 
 app = Service("sandy-api")
 

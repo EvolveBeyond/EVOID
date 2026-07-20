@@ -11,7 +11,8 @@ Complex orders — nested models, multiple parameters, query models.
 
 ```python
 from pydantic import BaseModel, Field
-from evoid.web.route import Service, get, post
+from evoid.adapters.asgi import get, post
+from evoid.web.route import Service
 
 app = Service("sandy-api")
 
