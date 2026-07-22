@@ -11,29 +11,15 @@ How EVOID works under the hood.
 
 Every request follows this path:
 
-```
-External Event (HTTP, CLI, Telegram, WebSocket, ...)
-        |
-        v
-   Adapter (converts event → Intent)
-        |
-        v
-   Intent (frozen dataclass)
-        |
-        v
-   Resolver (Intent -> PipelineConfig)
-        |
-        v
-   Pipeline (tuple of processor names)
-        |
-        v
-   Processor 1 -> Processor 2 -> ... -> Processor N
-        |
-        v
-   Result (success, value, error, duration)
-        |
-        v
-   Adapter (converts result → response)
+```mermaid
+flowchart TD
+    A["External Event<br/>(HTTP, CLI, Telegram, WebSocket, ...)"] --> B["Adapter<br/>(converts event → Intent)"]
+    B --> C["Intent<br/>(frozen dataclass)"]
+    C --> D["Resolver<br/>(Intent → PipelineConfig)"]
+    D --> E["Pipeline<br/>(tuple of processor names)"]
+    E --> F["Processor 1 → Processor 2 → ... → Processor N"]
+    F --> G["Result<br/>(success, value, error, duration)"]
+    G --> H["Adapter<br/>(converts result → response)"]
 ```
 
 Adapters bridge the outside world to EVOID. Route decorators (`get`, `post`, etc.) live in adapters because each one extracts params differently. See [Adapters](/EVOID/learn/adapters) for details.
@@ -173,16 +159,10 @@ server = create_mcp_server("my-api")
 
 Plugins follow IOP principles:
 
-```
-Plugin Package (evoid-redis)
-    |
-    | evoid_plugin.json (manifest)
-    |
-    v
-register_plugin() (entry point)
-    |
-    v
-EVOID Registry (dict)
+```mermaid
+flowchart TD
+    A["Plugin Package<br/>(evoid-redis)"] -->|"evoid_plugin.json<br/>(manifest)"| B["register_plugin()<br/>(entry point)"]
+    B --> C["EVOID Registry<br/>(dict)"]
 ```
 
 - Package name: `evoid-*` or `evoid-plugin-*`

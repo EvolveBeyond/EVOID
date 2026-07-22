@@ -9,16 +9,10 @@ Build a browser-based tic-tac-toe. Two players, turn-based, server-validated (no
 
 ## What We're Building
 
-```
-┌─────────────┐         ┌─────────────┐
-│  Player 1   │ ←─────→ │   EVOID     │
-│  (Godot)    │  WSS    │   Server    │
-└─────────────┘         └─────────────┘
-                              ↕
-┌─────────────┐         ┌─────────────┐
-│  Player 2   │ ←─────→ │  (Game      │
-│  (Godot)    │  WSS    │   Logic)    │
-└─────────────┘         └─────────────┘
+```mermaid
+graph LR
+    P1[Player 1<br/>Godot/WebGL] <-->|WSS| Server[EVOID Server<br/>Game Logic]
+    P2[Player 2<br/>Godot/WebGL] <-->|WSS| Server
 ```
 
 **Features:**
@@ -26,7 +20,8 @@ Build a browser-based tic-tac-toe. Two players, turn-based, server-validated (no
 - Server-side validation (impossible to cheat)
 - Room system (private games)
 - Win/draw detection
-- Instant WebGL loading
+- Desktop + WebGL export
+- Embeddable in any website (postMessage API)
 
 ## Why Tic-Tac-Toe?
 

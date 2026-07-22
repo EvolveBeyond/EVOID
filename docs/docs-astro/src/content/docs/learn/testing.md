@@ -24,24 +24,14 @@ pytest tests/ -v
 
 ## How It Works
 
-```
-def test_xxx():       # pytest collects this
-    return tc(intent) # creates TestCase
-        |
-        v
-pytest calls function
-        |
-        v
-TestCase returned
-        |
-        v
-Plugin executes Intent through pipeline
-        |
-        v
-Result compared with expect
-        |
-        v
-PASS / FAIL
+```mermaid
+flowchart TD
+    A["def test_xxx()<br/>pytest collects this"] --> B["tc(intent)<br/>creates TestCase"]
+    B --> C["pytest calls function"]
+    C --> D["TestCase returned"]
+    D --> E["Plugin executes Intent<br/>through pipeline"]
+    E --> F["Result compared<br/>with expect"]
+    F --> G["PASS / FAIL"]
 ```
 
 ## TestCase

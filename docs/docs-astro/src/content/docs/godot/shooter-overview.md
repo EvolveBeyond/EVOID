@@ -9,15 +9,13 @@ Build a top-down multiplayer shooter. Two players, real-time movement, shooting,
 
 ## What We're Building
 
-```
-┌─────────────────────────────────┐
-│         Arena Map               │
-│                                 │
-│    [Player 1] ←──→ [Player 2]  │
-│         ↑               ↑       │
-│         └─── EVOID ─────┘       │
-│             Server              │
-└─────────────────────────────────┘
+```mermaid
+graph TB
+    subgraph Arena["Arena Map"]
+        P1[Player 1] <-->|Movement + Shots| P2[Player 2]
+        P1 -->|WSS| Server[EVOID Server]
+        P2 -->|WSS| Server
+    end
 ```
 
 **Features:**
@@ -25,7 +23,8 @@ Build a top-down multiplayer shooter. Two players, real-time movement, shooting,
 - Shot detection with raycasting
 - Health system
 - Score tracking
-- WebGL export (play in browser)
+- Desktop + WebGL export
+- Binary intents (bandwidth optimization)
 
 ## Project Structure
 

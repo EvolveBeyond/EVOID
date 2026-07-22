@@ -229,16 +229,12 @@ async def handle(intent: Intent) -> dict:
 
 ## Lifecycle
 
-```
-Declaration (you create Intent)
-    |
-Registration (intent stored in registry)
-    |
-Resolution (runtime maps intent to PipelineConfig)
-    |
-Execution (pipeline runs processors in order)
-    |
-Result (success/failure with value and timing)
+```mermaid
+flowchart TD
+    A["Declaration<br/>(you create Intent)"] --> B["Registration<br/>(intent stored in registry)"]
+    B --> C["Resolution<br/>(runtime maps intent to PipelineConfig)"]
+    C --> D["Execution<br/>(pipeline runs processors in order)"]
+    D --> E["Result<br/>(success/failure with value and timing)"]
 ```
 
 ## Inspecting Registered Intents

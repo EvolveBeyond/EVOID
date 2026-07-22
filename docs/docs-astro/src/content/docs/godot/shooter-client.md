@@ -11,15 +11,20 @@ The Godot client handles player input, renders the game, and communicates with t
 
 ### Create Project
 
-1. Open Godot 4.x
+1. Open Godot 4.4+
 2. Create new project: `arena-shooter`
 3. Copy the EVOID plugin:
 
 ```bash
-cp -r /path/to/evolvebeyond-evoid-godot/evoid_godot addons/
+cp -r /path/to/evoid-godot/evoid_godot addons/
 ```
 
-4. Enable plugin: Project → Project Settings → Plugins → EVOID Integration → Enable
+4. Enable plugin: Project → Project Settings → Plugins → EVOID → Enable
+
+!!! info "What gets registered"
+    The plugin auto-registers 5 autoloads + 1 export plugin:
+    - `EvoidBus`, `EvoidClient`, `EvoidUDP`, `EvoidApp`, `EvoidWebLoader`
+    - `EvoidExportPlugin` (auto-injects SW on web export)
 
 ### Scene Structure
 
@@ -146,7 +151,6 @@ Create `scripts/main.gd`:
 extends Node2D
 ## Main — manages game lifecycle and player spawning.
 
-@export var server_url: String = "ws://localhost:8000/ws"
 @export var game_id: String = "arena-shooter"
 
 var players: Dictionary = {}  # player_id → player node
@@ -154,8 +158,8 @@ var local_player_id: String = ""
 
 
 func _ready() -> void:
-    # Connect to EVOID server
-    EvoidApp.connect_to_server(server_url, game_id)
+    # Auto-connect — detects WebGL, resolves same-origin URL
+    EvoidApp.auto_connect()
 
     # Wait for connection
     EvoidBus.subscribe(EvoidTopics.NET_AVAILABLE, _on_connected)
@@ -264,10 +268,11 @@ In Godot, set up input mappings:
 
 | Concept | What It Is |
 |---------|-----------|
-| `EvoidApp.connect_to_server()` | Connect to EVOID server |
+| `EvoidApp.auto_connect()` | Auto-detect WebGL, connect to same-origin |
 | `EvoidApp.send_intent()` | Send player actions |
 | `EvoidBus.subscribe()` | Receive server events |
 | `EvoidTopics.*` | Event type constants |
+| `EvoidConfig` | Configure server URL, game ID, UDP, export |
 | Remote player sync | Server broadcasts positions |
 | Local input | Only local player sends movement |
 

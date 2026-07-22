@@ -39,6 +39,12 @@ builds/arena-shooter/
 └── icon.png
 ```
 
+!!! info "Export Plugin"
+    The `EvoidExportPlugin` automatically:
+    - Injects Service Worker registration into `index.html`
+    - Generates `manifest.json` for chunk-aware loading
+    - No manual setup needed
+
 ## 2. Server: Host the Game
 
 Update `server/main.py` to serve the game:
@@ -86,11 +92,15 @@ func _ready() -> void:
     EvoidBus.subscribe(EvoidTopics.GAME_EVENT, _on_game_event)
     EvoidBus.subscribe(EvoidTopics.GAME_STATE_SYNC, _on_state_sync)
 
-    # Auto-connect in WebGL builds
-    if OS.has_feature("web"):
-        # Same-origin WebSocket
-        EvoidApp.connect_to_server()
+    # Auto-connect — detects WebGL, resolves same-origin URL
+    EvoidApp.auto_connect()
 ```
+
+!!! tip "Why auto_connect?"
+    `auto_connect()` does three things:
+    1. Checks `OS.has_feature("web")` — if desktop, falls back to `connect_to_server()`
+    2. Resolves WebSocket URL from `window.location` (same-origin)
+    3. Connects with configured `game_id`
 
 ## 4. Run
 
@@ -103,19 +113,59 @@ Open `http://localhost:8000/game/arena-shooter/`
 
 ## 5. How It Works
 
+The game doesn't download — it **streams** from the server:
+
 ```
 User visits /game/arena-shooter/
     ↓
 1. HTML splash loads instantly (<100ms)
-2. Service Worker registers
-3. engine.wasm streams in background
-4. game.pck loads in chunks
+   └─ Just a div with progress bar
+    ↓
+2. Service Worker registers (auto-injected by ExportPlugin)
+   └─ Caches engine.wasm + game.pck for instant repeat visits
+    ↓
+3. engine.wasm streams in background (~5-10MB)
+   └─ Godot engine as WebAssembly
+    ↓
+4. game.pck loads in chunks (256KB each)
+   └─ Server splits game data, client loads with progress bar
+    ↓
 5. Game starts — splash fades
+    ↓
 6. WebSocket connects to /ws
-7. Player joins game
+   └─ Player joins game
 ```
 
-## 6. Multi-Player in Browser
+### First Visit vs Repeat
+
+| Visit | What Happens | Time |
+|-------|-------------|------|
+| **First** | HTML → engine.wasm → game.pck chunks → Game | ~8-10s |
+| **Repeat** | HTML → cache hit → Game | <1s |
+
+The Service Worker caches everything. Second visit loads from disk, not network.
+
+## 6. Binary Intents (Optional)
+
+For bandwidth optimization, use binary WebSocket frames (~60% smaller than JSON):
+
+```gdscript
+# Instead of:
+EvoidApp.send_intent("player_shot", {"origin": pos, "direction": dir})
+
+# Use binary:
+EvoidClient.send_intent_binary("player_shot", {"origin": pos, "direction": dir})
+```
+
+!!! info "Binary format"
+    - 4 bytes: intent name length
+    - N bytes: intent name (UTF-8)
+    - 4 bytes: metadata length
+    - N bytes: JSON-encoded metadata
+
+    Server must handle both formats. Binary is optional — JSON always works.
+
+## 7. Multi-Player in Browser
 
 Open two browser tabs:
 - Tab 1: `http://localhost:8000/game/arena-shooter/`
@@ -128,9 +178,11 @@ Both connect to the same server. See each other's movements and shots.
 | Concept | What It Is |
 |---------|-----------|
 | Godot HTML5 export | Build WebGL game |
+| `EvoidExportPlugin` | Auto SW injection + manifest generation |
 | `GameHost` | Serve game with instant loading |
 | `SplashConfig` | Custom splash screen |
-| Auto-connect | Detect WebGL, connect to same-origin |
+| `auto_connect()` | Detect WebGL, connect to same-origin |
+| `send_intent_binary()` | Binary WebSocket frames (optional) |
 | Service Worker | Cache game for instant repeat visits |
 
 ## Congratulations
@@ -142,7 +194,8 @@ You've built a complete multiplayer shooter with:
 - Score tracking
 - WebGL deployment
 - Instant loading
+- Binary intent support
 
 ## Next
 
-Try the [Tic-Tac-Toe](tictactoe-overview.md) tutorial for a turn-based game.
+Try the [Tic-Tac-Toe](tictactoe-overview.md) tutorial for a turn-based game with embed support.

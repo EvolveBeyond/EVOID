@@ -177,16 +177,10 @@ The system knows: this is critical, route to PostgreSQL, enable audit logging, e
 
 ### The Triangle
 
-```
-        Human Intent
-       "I want to pay"
-            ↓
-    ┌───────┴───────┐
-    │               │
-Machine          System
-Understanding    Behavior
-"AI knows it's    "Runtime routes to
- a payment"        PostgreSQL + audit"
+```mermaid
+graph TD
+    H["Human Intent<br/>'I want to pay'"] --> M["Machine Understanding<br/>'AI knows it's a payment'"]
+    H --> S["System Behavior<br/>'Runtime routes to PostgreSQL + audit'"]
 ```
 
 **IOP is the only paradigm that connects all three.** Traditional approaches handle one or two:

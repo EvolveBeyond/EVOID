@@ -149,8 +149,6 @@ Create `scripts/main.gd`:
 extends Node2D
 ## Main — manages game lifecycle.
 
-@export var server_url: String = "ws://localhost:8000/ws"
-
 var player_id: String = ""
 var room_id: String = ""
 var my_mark: String = ""
@@ -160,11 +158,8 @@ func _ready() -> void:
     EvoidBus.subscribe(EvoidTopics.NET_AVAILABLE, _on_connected)
     EvoidBus.subscribe(EvoidTopics.GAME_EVENT, _on_game_event)
 
-    # Auto-connect in WebGL
-    if OS.has_feature("web"):
-        EvoidApp.connect_to_server()
-    else:
-        EvoidApp.connect_to_server(server_url)
+    # Auto-connect — detects WebGL, resolves same-origin URL
+    EvoidApp.auto_connect()
 
 
 func _on_connected(_data: Dictionary) -> void:
@@ -251,7 +246,11 @@ func _on_join_pressed() -> void:
         return
 
     status_label.text = "Connecting..."
-    EvoidApp.connect_to_server("ws://localhost:8000/ws", room)
+    # Configure and auto-connect
+    var config = EvoidConfig.new()
+    config.game_id = room
+    EvoidApp.config = config
+    EvoidApp.auto_connect()
 
 
 func _on_connected(_data: Dictionary) -> void:
@@ -273,6 +272,8 @@ func _on_connected(_data: Dictionary) -> void:
 
 | Concept | What It Is |
 |---------|-----------|
+| `EvoidApp.auto_connect()` | Auto-detect WebGL, connect to same-origin |
+| `EvoidConfig` | Configure game ID, server URL |
 | Cell clicks | Detect player input |
 | Board rendering | 3x3 grid of cells |
 | Move submission | Send to server via Intent |

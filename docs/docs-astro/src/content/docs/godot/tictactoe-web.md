@@ -1,11 +1,11 @@
 ---
 title: 'Tic-Tac-Toe: Web Deploy'
-description: 'Deploy as WebGL with instant loading. Embed in any website.'
+description: 'Deploy as WebGL with instant loading. Embed in any website seamlessly.'
 ---
 
 # Tic-Tac-Toe: Web Deploy
 
-Export as WebGL and host on EVOID with instant loading.
+Export as WebGL and host on EVOID with instant loading. Embed seamlessly in any website.
 
 ## 1. Export to HTML5
 
@@ -14,6 +14,9 @@ Export as WebGL and host on EVOID with instant loading.
 3. Enable Progressive Web App
 4. Export
 
+!!! info "Export Plugin"
+    `EvoidExportPlugin` automatically injects SW registration and generates `manifest.json`.
+
 ## 2. Server: Host the Game
 
 ```python
@@ -21,6 +24,7 @@ Export as WebGL and host on EVOID with instant loading.
 
 from evoid_godot import GameHost, SplashConfig
 
+# Standalone mode (splash screen)
 host = GameHost()
 host.register_build(
     "tic-tac-toe",
@@ -33,15 +37,28 @@ host.register_build(
     ),
 )
 
+# OR embed mode (seamless iframe integration)
+host_embed = GameHost(embed_mode=True)
+host_embed.register_build(
+    "tic-tac-toe",
+    "builds/tic-tac-toe/",
+    title="Tic-Tac-Toe",
+)
+
 from starlette.routing import Mount
 
 app = Starlette(
     routes=[
         Mount("/game", app=host.create_router()),
+        Mount("/embed", app=host_embed.create_router()),
         WebSocketRoute("/ws", ws_endpoint),
     ],
 )
 ```
+
+!!! tip "Standalone vs Embed"
+    - **Standalone** (`embed_mode=False`): Full splash screen, custom colors, works as a standalone game
+    - **Embed** (`embed_mode=True`): Minimal loader, transparent background, communicates with parent page via postMessage
 
 ## 3. Client: Auto-Connect
 
@@ -52,14 +69,13 @@ func _ready() -> void:
     EvoidBus.subscribe(EvoidTopics.NET_AVAILABLE, _on_connected)
     EvoidBus.subscribe(EvoidTopics.GAME_EVENT, _on_game_event)
 
-    # Auto-connect in WebGL
-    if OS.has_feature("web"):
-        EvoidApp.connect_to_server()
-    else:
-        EvoidApp.connect_to_server(server_url)
+    # Auto-connect — works for both desktop and WebGL
+    EvoidApp.auto_connect()
 ```
 
 ## 4. Embed in a Website
+
+### Basic Embed (iframe)
 
 The game runs at `/game/tic-tac-toe/`. Embed it in any HTML page:
 
@@ -93,6 +109,127 @@ The game runs at `/game/tic-tac-toe/`. Embed it in any HTML page:
 </html>
 ```
 
+### Seamless Embed (with postMessage API)
+
+For deeper integration, use the embed endpoint and postMessage API:
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Site — Play Games</title>
+    <style>
+        #game-frame {
+            width: 100%;
+            max-width: 600px;
+            height: 700px;
+            border: none;
+            border-radius: 12px;
+        }
+        #status { margin-top: 10px; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <h1>My Website</h1>
+    <iframe id="game-frame" src="/embed/tic-tac-toe/"></iframe>
+    <div id="status">Loading game...</div>
+
+    <script>
+    const frame = document.getElementById("game-frame");
+    const status = document.getElementById("status");
+
+    // Listen to game events
+    frame.addEventListener("message", (e) => {
+        if (!e.data || !e.data.type) return;
+
+        switch (e.data.type) {
+            case "evoid:ready":
+                status.textContent = "Game ready!";
+                break;
+            case "evoid:loading":
+                status.textContent = `Loading... ${e.data.progress}%`;
+                break;
+            case "evoid:player_joined":
+                status.textContent = `Player joined: ${e.data.player_id}`;
+                break;
+            case "evoid:player_left":
+                status.textContent = `Player left: ${e.data.player_id}`;
+                break;
+            case "evoid:state_sync":
+                // Update your UI with game state
+                break;
+        }
+    });
+
+    // Send commands to game
+    function pauseGame() {
+        frame.contentWindow.postMessage({
+            type: "evoid:send_intent",
+            name: "pause_game",
+            metadata: {}
+        }, "*");
+    }
+
+    function focusGame() {
+        frame.contentWindow.postMessage({
+            type: "evoid:focus"
+        }, "*");
+    }
+    </script>
+</body>
+</html>
+```
+
+### Game Side: Receive from Parent
+
+```gdscript
+# scripts/main.gd — handle embed messages
+
+func _ready() -> void:
+    EvoidWebLoader.embed_message.connect(_on_embed_message)
+
+func _on_embed_message(message: Dictionary):
+    match message.get("type"):
+        "evoid:send_intent":
+            var intent_name = message.get("name", "")
+            var metadata = message.get("metadata", {})
+            EvoidApp.send_intent(intent_name, metadata)
+        "evoid:focus":
+            grab_focus()
+        "evoid:resize":
+            # Handle resize from parent
+            pass
+```
+
+### Game Side: Send to Parent
+
+```gdscript
+# Notify parent when game events happen
+func _on_game_event(payload: Dictionary):
+    match payload.get("type"):
+        "player_joined":
+            EvoidWebLoader.post_to_parent("player_joined", {
+                "player_id": payload.get("player_id")
+            })
+        "game_over":
+            EvoidWebLoader.post_to_parent("game_over", {
+                "winner": payload.get("winner")
+            })
+```
+
+!!! info "postMessage API"
+    **Game → Parent:**
+    - `evoid:ready` — game loaded and connected
+    - `evoid:loading` — loading progress (phase, progress %)
+    - `evoid:player_joined` — player joined the game
+    - `evoid:player_left` — player left the game
+    - `evoid:state_sync` — game state update
+
+    **Parent → Game:**
+    - `evoid:send_intent` — send intent to game (name, metadata)
+    - `evoid:focus` — focus the game canvas
+    - `evoid:resize` — resize the canvas (width, height)
+
 ## 5. Share Link
 
 Share the game URL:
@@ -104,16 +241,20 @@ Both players open the link, enter the same room, and play.
 
 ## 6. How It Works
 
+The game doesn't download — it **streams** from the server:
+
 ```
 Player 1 opens link
     ↓
 HTML splash loads (<100ms)
     ↓
-Service Worker caches game
+Service Worker registers + caches game
     ↓
-engine.wasm + game.pck stream in
+engine.wasm streams in background (~5-10MB)
     ↓
-Game starts
+game.pck loads in chunks (256KB each)
+    ↓
+Game starts — splash fades
     ↓
 WebSocket connects to /ws
     ↓
@@ -123,10 +264,19 @@ Waiting for opponent...
     ↓
 Player 2 opens same link
     ↓
-Joins same room
+(From cache — <1 second)
     ↓
-Game starts!
+Joins same room → Game starts!
 ```
+
+### First Visit vs Repeat
+
+| Visit | What Happens | Time |
+|-------|-------------|------|
+| **First** | HTML → engine.wasm → game.pck chunks → Game | ~8-10s |
+| **Repeat** | HTML → cache hit → Game | <1s |
+
+The Service Worker caches engine.wasm and game.pck. Second visit loads from disk.
 
 ## 7. Custom Domain
 
@@ -145,6 +295,13 @@ server {
         proxy_set_header Connection "upgrade";
     }
 
+    location /embed/ {
+        proxy_pass http://localhost:8000/embed/;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+    }
+
     location /ws {
         proxy_pass http://localhost:8000/ws;
         proxy_http_version 1.1;
@@ -156,11 +313,13 @@ server {
 
 ## What You Learned
 
-| Concept | What It Is |
+| Concept | What It It |
 |---------|-----------|
 | HTML5 export | Build WebGL game |
 | `GameHost` | Serve with instant loading |
-| Embed | iframe in any website |
+| `GameHost(embed_mode)` | Seamless iframe embed |
+| `postMessage` API | Parent ↔ game communication |
+| `auto_connect()` | Auto-detect WebGL |
 | Share link | Direct URL to game |
 | Custom domain | Production deployment |
 
@@ -174,17 +333,18 @@ You've built a complete online tic-tac-toe with:
 - WebGL deployment
 - Instant loading
 - Embeddable in any website
+- Seamless parent page integration
 
 ## Summary: What You Built
 
 | Project | What It Teaches |
 |---------|----------------|
 | **Arena Shooter** | Real-time sync, movement, shooting, health |
-| **Tic-Tac-Toe** | Turn-based, validation, rooms, win detection |
+| **Tic-Tac-Toe** | Turn-based, validation, rooms, win detection, embed |
 
 Both use the same EVOID plugins:
-- **evoid_godot** (GDScript) — client connection
-- **evoid-godot** (Python) — server logic + hosting
+- **evoid_godot** (GDScript) — client connection, web loading, embed API
+- **evoid-godot** (Python) — server logic + hosting + embed mode
 
 ## Next
 
