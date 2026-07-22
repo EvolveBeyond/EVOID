@@ -217,7 +217,9 @@ def post(path: str, level: str = "standard") -> Callable:
         register(intent)
 
         async def processor(ctx: Context) -> Any:
-            body = ctx.metadata.get("body", {})
+            if "body" not in ctx.metadata:
+                raise ValueError(f"POST {path}: missing request body in context metadata")
+            body = ctx.metadata["body"]
             return await func(**body)
 
         register_processor(intent.name, processor)
@@ -233,7 +235,9 @@ def put(path: str, level: str = "standard") -> Callable:
         register(intent)
 
         async def processor(ctx: Context) -> Any:
-            body = ctx.metadata.get("body", {})
+            if "body" not in ctx.metadata:
+                raise ValueError(f"PUT {path}: missing request body in context metadata")
+            body = ctx.metadata["body"]
             return await func(**body)
 
         register_processor(intent.name, processor)

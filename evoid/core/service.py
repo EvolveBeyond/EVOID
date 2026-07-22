@@ -10,7 +10,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from .intent import Intent
-from .message_bus import Handler, publish, subscribe
+from .message_bus import Handler, publish, subscribe, unsubscribe
 
 
 @dataclass
@@ -20,6 +20,7 @@ class Service:
     name: str
     handlers: dict[str, Handler] = field(default_factory=dict)
     running: bool = False
+    _wrappers: dict[str, Handler] = field(default_factory=dict, repr=False)
 
 
 def start(service: Service) -> None:
@@ -30,12 +31,17 @@ def start(service: Service) -> None:
     for intent_name, handler in service.handlers.items():
         async def _wrapper(intent: Intent, h: Handler = handler) -> Any:
             return await h(intent)
+        service._wrappers[intent_name] = _wrapper
         subscribe(intent_name, _wrapper)
 
 
 def stop(service: Service) -> None:
-    """Stop a service."""
+    """Stop a service and unregister handlers from message bus."""
     service.running = False
+
+    for intent_name, wrapper in service._wrappers.items():
+        unsubscribe(intent_name, wrapper)
+    service._wrappers.clear()
 
 
 def on(service: Service, intent_name: str, handler: Handler) -> None:
@@ -46,6 +52,7 @@ def on(service: Service, intent_name: str, handler: Handler) -> None:
     if service.running:
         async def _wrapper(intent: Intent, h: Handler = handler) -> Any:
             return await h(intent)
+        service._wrappers[intent_name] = _wrapper
         subscribe(intent_name, _wrapper)
 
 

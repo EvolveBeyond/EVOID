@@ -79,8 +79,10 @@ def Controller(prefix: str = "", level: str = "standard") -> Callable:
                     original_method = getattr(instance, attr_name)
 
                     async def processor(ctx: Context, m=original_method) -> Any:
-                        body = ctx.metadata.get("body", {})
-                        return await m(**body) if body else await m()
+                        if "body" not in ctx.metadata:
+                            raise ValueError(f"Controller {cls.__name__}.{attr_name}: missing request body")
+                        body = ctx.metadata["body"]
+                        return await m(**body)
 
                     register_processor(intent.name, processor)
 

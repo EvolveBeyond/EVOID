@@ -77,6 +77,8 @@ async def execute(
         for name in pipeline:
             processor = registry.get(name)
             if processor is None:
+                import logging
+                logging.warning("Pipeline: processor '%s' not found in registry, skipping", name)
                 continue
 
             step_start = time.monotonic()
@@ -130,6 +132,8 @@ async def execute(
         for name in pipeline:
             processor = registry.get(name)
             if processor is None:
+                import logging
+                logging.warning("Pipeline: processor '%s' not found in registry, skipping", name)
                 continue
 
             try:
@@ -157,6 +161,8 @@ async def execute(
         for name in pipeline:
             processor = registry.get(name)
             if processor is None:
+                import logging
+                logging.warning("Pipeline: processor '%s' not found in registry, skipping", name)
                 continue
 
             try:

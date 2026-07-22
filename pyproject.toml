@@ -62,10 +62,12 @@ toml = ["tomli>=2.0.0,<3.0.0", "tomli_w>=1.0.0,<2.0.0"]
 # Testing with WebUI
 testing = ["starlette>=0.27.0,<0.40.0"]
 # Full stack
-full = ["evoid[pydantic,asgi,sqlite,redis,loguru,toml]"]
+full = ["evoid[pydantic,asgi,robyn,telegram,sqlite,redis,sqlalchemy,loguru,toml,testing]"]
+
+[project.entry-points.pytest11]
+evoid = "evoid.testing.plugin"
 
 [tool.pytest.ini_options]
-evoid_plugins = ["evoid.testing.plugin"]
 
 [tool.ruff]
 line-length = 120

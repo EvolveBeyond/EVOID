@@ -124,6 +124,7 @@ def cmd_sync() -> None:
 
 def cmd_run() -> None:
     """Run all services in project."""
+    import asyncio
     from evoid.project import list_services
 
     services = list_services(".")
@@ -136,9 +137,21 @@ def cmd_run() -> None:
     for svc in services:
         print(f"  - {svc.name} (port {svc.port})")
 
-    # For now, run first service
-    # TODO: Run all services concurrently
-    cmd_service_run(services[0].name)
+    async def _run_all():
+        import uvicorn
+        from evoid.adapters.asgi import create_app
+
+        servers = []
+        for svc in services:
+            config = load_config(str(svc.path / "evoid.toml"))
+            app = create_app(name=svc.name)
+            uconfig = uvicorn.Config(app, host=config.runtime.host, port=svc.port, log_level="info")
+            server = uvicorn.Server(uconfig)
+            servers.append(server)
+
+        await asyncio.gather(*(s.serve() for s in servers))
+
+    asyncio.run(_run_all())
 
 
 def cmd_serve(host: str = "0.0.0.0", port: int = 8000) -> None:
