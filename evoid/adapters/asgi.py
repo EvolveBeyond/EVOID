@@ -22,7 +22,7 @@ from typing import Any
 from ..core import Context, register, register_processor
 from ..core.extend import replace_pipeline
 from ..core.intent import Intent, Level
-from ..core.resolver import _DEFAULT_PROCESSORS
+from ..core.resolver import PipelineConfig, _DEFAULT_PROCESSORS
 from ..core.runtime import execute
 
 # Handler type: takes Intent, returns result
@@ -83,13 +83,28 @@ def create_app(
         # Convert to Intent
         intent = _intent_from_request(method, path, body, headers, query=query)
 
-        # Find handler and inject into pipeline
-        handler = _handlers.get(intent.name)
+        # Find handler — exact match first, then pattern match
+        intent_name, path_params = _match_intent(method, path, _handlers)
+
+        # Rebuild intent if pattern matched (with extracted params)
+        if path_params:
+            intent = _intent_from_request(method, path, body, headers, query=query, path_params=path_params)
+            # Override intent name with the matched pattern
+            intent = Intent(
+                name=intent_name,
+                level=intent.level,
+                metadata={**intent.metadata, "params": path_params},
+            )
+
+        handler = _handlers.get(intent_name) if intent_name else None
 
         try:
             if handler:
                 # Register handler as processor and compose pipeline
-                register_processor(intent.name, handler)
+                # Wrap: pipeline passes Context, user handler expects Intent
+                async def _adapted(ctx: Context) -> Any:
+                    return await handler(ctx.intent)
+                register_processor(intent.name, _adapted)
                 security = _DEFAULT_PROCESSORS.get(intent.level, ())
                 replace_pipeline(intent.name, [*security, intent.name])
 
@@ -176,6 +191,55 @@ def _intent_from_request(
     )
 
 
+def _match_path(template: str, path: str) -> dict[str, str] | None:
+    """Match a path template like /users/{id} against /users/42.
+
+    Returns extracted params dict, or None if no match.
+    """
+    template_parts = template.strip("/").split("/")
+    path_parts = path.strip("/").split("/")
+
+    if len(template_parts) != len(path_parts):
+        return None
+
+    params = {}
+    for t, p in zip(template_parts, path_parts):
+        if t.startswith("{") and t.endswith("}"):
+            params[t[1:-1]] = p
+        elif t != p:
+            return None
+
+    return params
+
+
+def _match_intent(
+    method: str,
+    path: str,
+    handlers: dict[str, Handler],
+) -> tuple[str | None, dict[str, str]]:
+    """Match request against handler keys with path template support.
+
+    Returns (intent_name, extracted_params) or (None, {}).
+    """
+    # 1. Exact match (fast path)
+    exact = f"{method.upper()}:{path}"
+    if exact in handlers:
+        return exact, {}
+
+    # 2. Pattern match against handler keys
+    for pattern in handlers:
+        if ":" not in pattern:
+            continue
+        pattern_method, pattern_path = pattern.split(":", 1)
+        if pattern_method.upper() != method.upper():
+            continue
+        params = _match_path(pattern_path, path)
+        if params is not None:
+            return pattern, params
+
+    return None, {}
+
+
 def run(
     name: str = "evoid-service",
     handlers: dict[str, Handler] | None = None,
@@ -200,14 +264,23 @@ def run(
 # Route decorators — adapter-specific
 # ============================================================
 
-from ..web._shared import create_intent as _create_intent
-
 
 def get(path: str, level: str = "standard") -> Callable:
     """GET route — creates Intent, registers ASGI handler."""
     def decorator(func: Handler) -> Handler:
+        from ..web._shared import create_intent as _create_intent
+        from ..core.annotations import apply_annotations, validate_annotations
+
         intent = _create_intent("GET", path, level)
         register(intent)
+
+        # Read and validate annotations
+        ann = apply_annotations(func)
+        errors = validate_annotations(func)
+        if errors:
+            import logging
+            for e in errors:
+                logging.error("Annotation error on %s: %s", func.__name__, e)
 
         async def processor(ctx: Context) -> Any:
             params = ctx.metadata.get("params", {})
@@ -215,9 +288,26 @@ def get(path: str, level: str = "standard") -> Callable:
 
         register_processor(intent.name, processor)
 
-        # Compose full pipeline: security processors + handler
-        security = _DEFAULT_PROCESSORS.get(intent.level, ())
-        replace_pipeline(intent.name, [*security, intent.name])
+        # Compose pipeline: use annotation pipeline if specified, else defaults
+        if ann["pipeline"]:
+            pipeline = ann["pipeline"]
+        else:
+            security = _DEFAULT_PROCESSORS.get(intent.level, ())
+            pipeline = [*security, intent.name]
+
+        replace_pipeline(intent.name, pipeline)
+
+        # Apply annotation timeout if specified
+        if ann["timeout"] is not None:
+            from ..core.extend import _pipeline_overrides
+            existing = _pipeline_overrides.get(intent.name)
+            if existing:
+                _pipeline_overrides[intent.name] = PipelineConfig(
+                    processors=existing.processors,
+                    priority=existing.priority,
+                    timeout=ann["timeout"],
+                    metadata=existing.metadata,
+                )
 
         return func
     return decorator
@@ -226,8 +316,19 @@ def get(path: str, level: str = "standard") -> Callable:
 def post(path: str, level: str = "standard") -> Callable:
     """POST route — creates Intent, registers ASGI handler."""
     def decorator(func: Handler) -> Handler:
+        from ..web._shared import create_intent as _create_intent
+        from ..core.annotations import apply_annotations, validate_annotations
+
         intent = _create_intent("POST", path, level)
         register(intent)
+
+        # Read and validate annotations
+        ann = apply_annotations(func)
+        errors = validate_annotations(func)
+        if errors:
+            import logging
+            for e in errors:
+                logging.error("Annotation error on %s: %s", func.__name__, e)
 
         async def processor(ctx: Context) -> Any:
             if "body" not in ctx.metadata:
@@ -237,9 +338,26 @@ def post(path: str, level: str = "standard") -> Callable:
 
         register_processor(intent.name, processor)
 
-        # Compose full pipeline: security processors + handler
-        security = _DEFAULT_PROCESSORS.get(intent.level, ())
-        replace_pipeline(intent.name, [*security, intent.name])
+        # Compose pipeline: use annotation pipeline if specified, else defaults
+        if ann["pipeline"]:
+            pipeline = ann["pipeline"]
+        else:
+            security = _DEFAULT_PROCESSORS.get(intent.level, ())
+            pipeline = [*security, intent.name]
+
+        replace_pipeline(intent.name, pipeline)
+
+        # Apply annotation timeout if specified
+        if ann["timeout"] is not None:
+            from ..core.extend import _pipeline_overrides
+            existing = _pipeline_overrides.get(intent.name)
+            if existing:
+                _pipeline_overrides[intent.name] = PipelineConfig(
+                    processors=existing.processors,
+                    priority=existing.priority,
+                    timeout=ann["timeout"],
+                    metadata=existing.metadata,
+                )
 
         return func
     return decorator
@@ -248,8 +366,18 @@ def post(path: str, level: str = "standard") -> Callable:
 def put(path: str, level: str = "standard") -> Callable:
     """PUT route — creates Intent, registers ASGI handler."""
     def decorator(func: Handler) -> Handler:
+        from ..web._shared import create_intent as _create_intent
+        from ..core.annotations import apply_annotations, validate_annotations
+
         intent = _create_intent("PUT", path, level)
         register(intent)
+
+        ann = apply_annotations(func)
+        errors = validate_annotations(func)
+        if errors:
+            import logging
+            for e in errors:
+                logging.error("Annotation error on %s: %s", func.__name__, e)
 
         async def processor(ctx: Context) -> Any:
             if "body" not in ctx.metadata:
@@ -259,9 +387,24 @@ def put(path: str, level: str = "standard") -> Callable:
 
         register_processor(intent.name, processor)
 
-        # Compose full pipeline: security processors + handler
-        security = _DEFAULT_PROCESSORS.get(intent.level, ())
-        replace_pipeline(intent.name, [*security, intent.name])
+        if ann["pipeline"]:
+            pipeline = ann["pipeline"]
+        else:
+            security = _DEFAULT_PROCESSORS.get(intent.level, ())
+            pipeline = [*security, intent.name]
+
+        replace_pipeline(intent.name, pipeline)
+
+        if ann["timeout"] is not None:
+            from ..core.extend import _pipeline_overrides
+            existing = _pipeline_overrides.get(intent.name)
+            if existing:
+                _pipeline_overrides[intent.name] = PipelineConfig(
+                    processors=existing.processors,
+                    priority=existing.priority,
+                    timeout=ann["timeout"],
+                    metadata=existing.metadata,
+                )
 
         return func
     return decorator
@@ -270,8 +413,18 @@ def put(path: str, level: str = "standard") -> Callable:
 def delete(path: str, level: str = "standard") -> Callable:
     """DELETE route — creates Intent, registers ASGI handler."""
     def decorator(func: Handler) -> Handler:
+        from ..web._shared import create_intent as _create_intent
+        from ..core.annotations import apply_annotations, validate_annotations
+
         intent = _create_intent("DELETE", path, level)
         register(intent)
+
+        ann = apply_annotations(func)
+        errors = validate_annotations(func)
+        if errors:
+            import logging
+            for e in errors:
+                logging.error("Annotation error on %s: %s", func.__name__, e)
 
         async def processor(ctx: Context) -> Any:
             params = ctx.metadata.get("params", {})
@@ -279,9 +432,24 @@ def delete(path: str, level: str = "standard") -> Callable:
 
         register_processor(intent.name, processor)
 
-        # Compose full pipeline: security processors + handler
-        security = _DEFAULT_PROCESSORS.get(intent.level, ())
-        replace_pipeline(intent.name, [*security, intent.name])
+        if ann["pipeline"]:
+            pipeline = ann["pipeline"]
+        else:
+            security = _DEFAULT_PROCESSORS.get(intent.level, ())
+            pipeline = [*security, intent.name]
+
+        replace_pipeline(intent.name, pipeline)
+
+        if ann["timeout"] is not None:
+            from ..core.extend import _pipeline_overrides
+            existing = _pipeline_overrides.get(intent.name)
+            if existing:
+                _pipeline_overrides[intent.name] = PipelineConfig(
+                    processors=existing.processors,
+                    priority=existing.priority,
+                    timeout=ann["timeout"],
+                    metadata=existing.metadata,
+                )
 
         return func
     return decorator

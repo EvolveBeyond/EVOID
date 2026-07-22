@@ -38,8 +38,8 @@ async def execute(intent: Intent, config: Config | None = None) -> Result:
     # 2. Apply routing rules
     pipeline = apply_routing(pipeline_config.processors, intent.name)
 
-    # 3. Create context
-    context = Context(intent=intent)
+    # 3. Create context — copy intent metadata so processors can read it
+    context = Context(intent=intent, metadata=intent.metadata.copy())
 
     # 4. Execute pipeline — pass registry ref directly, no copy
     return await execute_pipeline(

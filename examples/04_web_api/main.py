@@ -102,9 +102,9 @@ register(HEALTH)
 
 # Create handler mapping
 handlers = {
-    "post:/api/payment": handle_payment,
-    "post:/api/users": handle_user_create,
-    "get:/api/users": handle_user_get,
+    "POST:/api/payment": handle_payment,
+    "POST:/api/users": handle_user_create,
+    "GET:/api/users": handle_user_get,
 }
 
 
