@@ -67,12 +67,19 @@ def unsubscribe(topic: str, handler: Handler) -> bool:
         return False
 
 
-async def publish(intent: Intent, source: str = "", target: str = "") -> list[Any]:
+async def publish(intent: Intent | str, source: str = "", target: str = "") -> list[Any]:
     """Publish an intent to all matching subscribers.
 
-    This is the core communication function.
-    No HTTP. No serialization. Direct function calls.
+    Args:
+        intent: Intent object or topic string. String is auto-wrapped in Intent.
+        source: Source identifier.
+        target: Target identifier.
     """
+    # Accept string topic — auto-wrap in Intent
+    if isinstance(intent, str):
+        from .intent import Level
+        intent = Intent(name=intent, level=Level.STANDARD)
+
     message = Message(intent=intent, source=source, target=target)
     with _lock:
         if len(_history) < _MAX_HISTORY:

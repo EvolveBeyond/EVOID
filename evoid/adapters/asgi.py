@@ -265,44 +265,138 @@ def run(
 # ============================================================
 
 
+def _make_processor(func: Handler, method: str) -> Callable:
+    """Create a smart processor that reads input annotations.
+
+    Based on @body/@params/@headers declarations, passes data correctly.
+    """
+    from ..core.annotations import apply_annotations
+    ann = apply_annotations(func)
+    inp = ann["input"]
+    fn_name = getattr(func, "__name__", str(func))
+
+    # Check if func accepts **kwargs (can unpack anything)
+    import inspect
+    sig = inspect.signature(func)
+    has_var_keyword = any(
+        p.kind == inspect.Parameter.VAR_KEYWORD
+        for p in sig.parameters.values()
+    )
+
+    # Explicit @body declaration
+    if inp and inp.get("type") == "body":
+        optional = inp.get("optional", False)
+
+        async def body_processor(ctx: Context) -> Any:
+            body = ctx.metadata.get("body", {})
+            if body:
+                return await func(**body)
+            elif optional:
+                return await func()
+            else:
+                raise ValueError(
+                    f"{fn_name}: @body declared but request body is empty. "
+                    f"Send a JSON body or add @body(optional=True)."
+                )
+        return body_processor
+
+    # Explicit @params declaration
+    if inp and inp.get("type") == "params":
+        async def params_processor(ctx: Context) -> Any:
+            params = ctx.metadata.get("params", {})
+            return await func(**params)
+        return params_processor
+
+    # Auto-detected from signature (has user params besides ctx/intent)
+    if inp and inp.get("type") == "auto":
+        auto_params = inp.get("params", [])
+
+        if method.upper() in ("POST", "PUT", "PATCH"):
+            # POST/PUT: try body first, fallback to params
+            async def auto_body_processor(ctx: Context) -> Any:
+                body = ctx.metadata.get("body", {})
+                params = ctx.metadata.get("params", {})
+                # Merge: body fields + path/query params
+                merged = {**body, **params}
+                if merged:
+                    return await func(**merged)
+                elif has_var_keyword:
+                    return await func()
+                else:
+                    return await func()
+            return auto_body_processor
+        else:
+            # GET/DELETE: params only
+            async def auto_params_processor(ctx: Context) -> Any:
+                params = ctx.metadata.get("params", {})
+                if params:
+                    return await func(**params)
+                elif has_var_keyword:
+                    return await func()
+                else:
+                    return await func()
+            return auto_params_processor
+
+    # No input declaration and no params in signature → no-arg call
+    if not inp:
+        # Check if func has any user params at all
+        user_params = [
+            p for p in sig.parameters.values()
+            if p.name not in ("ctx", "intent", "self")
+            and p.kind not in (inspect.Parameter.VAR_POSITIONAL, inspect.Parameter.VAR_KEYWORD)
+        ]
+        if not user_params:
+            async def noarg_processor(ctx: Context) -> Any:
+                return await func()
+            return noarg_processor
+
+    # Fallback: original behavior (params for GET, body for POST)
+    if method.upper() in ("POST", "PUT", "PATCH"):
+        async def fallback_body(ctx: Context) -> Any:
+            body = ctx.metadata.get("body", {})
+            if body:
+                return await func(**body)
+            return await func()
+        return fallback_body
+    else:
+        async def fallback_params(ctx: Context) -> Any:
+            params = ctx.metadata.get("params", {})
+            return await func(**params)
+        return fallback_params
+
+
 def get(path: str, level: str = "standard") -> Callable:
     """GET route — creates Intent, registers ASGI handler."""
     def decorator(func: Handler) -> Handler:
         from ..web._shared import create_intent as _create_intent
         from ..core.annotations import apply_annotations, validate_annotations
 
-        intent = _create_intent("GET", path, level)
-        register(intent)
+        intent_obj = _create_intent("GET", path, level)
+        register(intent_obj)
 
-        # Read and validate annotations
         ann = apply_annotations(func)
-        errors = validate_annotations(func)
+        errors = validate_annotations(func, method="GET")
         if errors:
             import logging
             for e in errors:
                 logging.error("Annotation error on %s: %s", func.__name__, e)
 
-        async def processor(ctx: Context) -> Any:
-            params = ctx.metadata.get("params", {})
-            return await func(**params)
+        processor = _make_processor(func, "GET")
+        register_processor(intent_obj.name, processor)
 
-        register_processor(intent.name, processor)
-
-        # Compose pipeline: use annotation pipeline if specified, else defaults
         if ann["pipeline"]:
             pipeline = ann["pipeline"]
         else:
-            security = _DEFAULT_PROCESSORS.get(intent.level, ())
-            pipeline = [*security, intent.name]
+            security = _DEFAULT_PROCESSORS.get(intent_obj.level, ())
+            pipeline = [*security, intent_obj.name]
 
-        replace_pipeline(intent.name, pipeline)
+        replace_pipeline(intent_obj.name, pipeline)
 
-        # Apply annotation timeout if specified
         if ann["timeout"] is not None:
             from ..core.extend import _pipeline_overrides
-            existing = _pipeline_overrides.get(intent.name)
+            existing = _pipeline_overrides.get(intent_obj.name)
             if existing:
-                _pipeline_overrides[intent.name] = PipelineConfig(
+                _pipeline_overrides[intent_obj.name] = PipelineConfig(
                     processors=existing.processors,
                     priority=existing.priority,
                     timeout=ann["timeout"],
@@ -319,40 +413,32 @@ def post(path: str, level: str = "standard") -> Callable:
         from ..web._shared import create_intent as _create_intent
         from ..core.annotations import apply_annotations, validate_annotations
 
-        intent = _create_intent("POST", path, level)
-        register(intent)
+        intent_obj = _create_intent("POST", path, level)
+        register(intent_obj)
 
-        # Read and validate annotations
         ann = apply_annotations(func)
-        errors = validate_annotations(func)
+        errors = validate_annotations(func, method="POST")
         if errors:
             import logging
             for e in errors:
                 logging.error("Annotation error on %s: %s", func.__name__, e)
 
-        async def processor(ctx: Context) -> Any:
-            if "body" not in ctx.metadata:
-                raise ValueError(f"POST {path}: missing request body in context metadata")
-            body = ctx.metadata["body"]
-            return await func(**body)
+        processor = _make_processor(func, "POST")
+        register_processor(intent_obj.name, processor)
 
-        register_processor(intent.name, processor)
-
-        # Compose pipeline: use annotation pipeline if specified, else defaults
         if ann["pipeline"]:
             pipeline = ann["pipeline"]
         else:
-            security = _DEFAULT_PROCESSORS.get(intent.level, ())
-            pipeline = [*security, intent.name]
+            security = _DEFAULT_PROCESSORS.get(intent_obj.level, ())
+            pipeline = [*security, intent_obj.name]
 
-        replace_pipeline(intent.name, pipeline)
+        replace_pipeline(intent_obj.name, pipeline)
 
-        # Apply annotation timeout if specified
         if ann["timeout"] is not None:
             from ..core.extend import _pipeline_overrides
-            existing = _pipeline_overrides.get(intent.name)
+            existing = _pipeline_overrides.get(intent_obj.name)
             if existing:
-                _pipeline_overrides[intent.name] = PipelineConfig(
+                _pipeline_overrides[intent_obj.name] = PipelineConfig(
                     processors=existing.processors,
                     priority=existing.priority,
                     timeout=ann["timeout"],
@@ -369,37 +455,74 @@ def put(path: str, level: str = "standard") -> Callable:
         from ..web._shared import create_intent as _create_intent
         from ..core.annotations import apply_annotations, validate_annotations
 
-        intent = _create_intent("PUT", path, level)
-        register(intent)
+        intent_obj = _create_intent("PUT", path, level)
+        register(intent_obj)
 
         ann = apply_annotations(func)
-        errors = validate_annotations(func)
+        errors = validate_annotations(func, method="PUT")
         if errors:
             import logging
             for e in errors:
                 logging.error("Annotation error on %s: %s", func.__name__, e)
 
-        async def processor(ctx: Context) -> Any:
-            if "body" not in ctx.metadata:
-                raise ValueError(f"PUT {path}: missing request body in context metadata")
-            body = ctx.metadata["body"]
-            return await func(**body)
-
-        register_processor(intent.name, processor)
+        processor = _make_processor(func, "PUT")
+        register_processor(intent_obj.name, processor)
 
         if ann["pipeline"]:
             pipeline = ann["pipeline"]
         else:
-            security = _DEFAULT_PROCESSORS.get(intent.level, ())
-            pipeline = [*security, intent.name]
+            security = _DEFAULT_PROCESSORS.get(intent_obj.level, ())
+            pipeline = [*security, intent_obj.name]
 
-        replace_pipeline(intent.name, pipeline)
+        replace_pipeline(intent_obj.name, pipeline)
 
         if ann["timeout"] is not None:
             from ..core.extend import _pipeline_overrides
-            existing = _pipeline_overrides.get(intent.name)
+            existing = _pipeline_overrides.get(intent_obj.name)
             if existing:
-                _pipeline_overrides[intent.name] = PipelineConfig(
+                _pipeline_overrides[intent_obj.name] = PipelineConfig(
+                    processors=existing.processors,
+                    priority=existing.priority,
+                    timeout=ann["timeout"],
+                    metadata=existing.metadata,
+                )
+
+        return func
+    return decorator
+
+
+def delete(path: str, level: str = "standard") -> Callable:
+    """DELETE route — creates Intent, registers ASGI handler."""
+    def decorator(func: Handler) -> Handler:
+        from ..web._shared import create_intent as _create_intent
+        from ..core.annotations import apply_annotations, validate_annotations
+
+        intent_obj = _create_intent("DELETE", path, level)
+        register(intent_obj)
+
+        ann = apply_annotations(func)
+        errors = validate_annotations(func, method="DELETE")
+        if errors:
+            import logging
+            for e in errors:
+                logging.error("Annotation error on %s: %s", func.__name__, e)
+
+        processor = _make_processor(func, "DELETE")
+        register_processor(intent_obj.name, processor)
+
+        if ann["pipeline"]:
+            pipeline = ann["pipeline"]
+        else:
+            security = _DEFAULT_PROCESSORS.get(intent_obj.level, ())
+            pipeline = [*security, intent_obj.name]
+
+        replace_pipeline(intent_obj.name, pipeline)
+
+        if ann["timeout"] is not None:
+            from ..core.extend import _pipeline_overrides
+            existing = _pipeline_overrides.get(intent_obj.name)
+            if existing:
+                _pipeline_overrides[intent_obj.name] = PipelineConfig(
                     processors=existing.processors,
                     priority=existing.priority,
                     timeout=ann["timeout"],

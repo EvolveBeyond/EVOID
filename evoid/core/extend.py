@@ -26,7 +26,8 @@ from .resolver import _DEFAULT_PROCESSORS, PipelineConfig, resolve_pipeline
 def add_intent(intent: Intent, handler: Callable) -> None:
     """Add a new Intent with its handler.
 
-    This is how users extend the system with new capabilities.
+    Automatically composes pipeline: [intent.name].
+    Override with replace_pipeline() after calling this.
 
     Usage:
         from evoid.core import Intent, Level
@@ -43,35 +44,52 @@ def add_intent(intent: Intent, handler: Callable) -> None:
 
         add_intent(NEW_FEATURE, handle_new_feature)
     """
-    # Register intent
     register_intent(intent)
-
-    # Register handler as processor
     register_processor(intent.name, handler)
+    # Auto-compose pipeline so handler actually runs
+    _pipeline_overrides[intent.name] = PipelineConfig(
+        processors=(intent.name,),
+        priority=intent.priority,
+    )
 
 
 def add_intent_with_pipeline(
     intent: Intent,
-    processors: list[str],
+    processors: list[str | Callable],
     handler: Callable | None = None,
 ) -> None:
     """Add a new Intent with custom pipeline.
 
+    Processors can be strings (registered processor names) or callables
+    (handler functions registered automatically under their __name__).
+
     Usage:
         add_intent_with_pipeline(
             Intent(name="complex_op", level=Level.CRITICAL),
-            processors=["validate", "transform", "save", "notify"],
+            processors=["validate", transform_func, "save", notify_func],
             handler=my_handler,
         )
     """
     register_intent(intent)
 
+    # Process mixed list: strings + callables
+    resolved: list[str] = []
+    for p in processors:
+        if callable(p):
+            name = getattr(p, "__name__", str(p))
+            register_processor(name, p)
+            resolved.append(name)
+        else:
+            resolved.append(p)
+
+    # Register handler if provided
     if handler:
         register_processor(intent.name, handler)
+        if intent.name not in resolved:
+            resolved.append(intent.name)
 
-    # Override pipeline config for this intent
     _pipeline_overrides[intent.name] = PipelineConfig(
-        processors=tuple(processors),
+        processors=tuple(resolved),
         priority=intent.priority,
         timeout=intent.metadata.get("timeout"),
     )

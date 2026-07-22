@@ -69,6 +69,7 @@ class Result:
     processors: tuple[str, ...] = ()
     duration: float = 0.0
     steps: tuple[ProcessorResult, ...] = ()
+    warnings: tuple[str, ...] = ()
 
 
 async def execute(
@@ -77,15 +78,18 @@ async def execute(
     registry: dict[str, Processor],
     timeout: float | None = None,
     inspect: bool = False,
+    strict: bool = False,
 ) -> Result:
     """Execute a pipeline of processors.
 
     Args:
         inspect: If True, capture per-processor state snapshots.
+        strict: If True, raise LookupError when processor not found.
     """
     start = time.monotonic()
     ran: list[str] = []
     steps: list[ProcessorResult] = []
+    warnings: list[str] = []
     result = None
 
     # Emit pre_execute event (zero cost when no hooks)
@@ -99,8 +103,18 @@ async def execute(
             for name in pipeline:
                 processor = registry.get(name)
                 if processor is None:
+                    msg = f"Pipeline: processor '{name}' not found in registry, skipping"
+                    if strict:
+                        return Result(
+                            success=False,
+                            error=LookupError(msg),
+                            processors=tuple(ran),
+                            warnings=tuple(warnings),
+                            duration=time.monotonic() - start,
+                        )
                     import logging
-                    logging.warning("Pipeline: processor '%s' not found in registry, skipping", name)
+                    logging.warning(msg)
+                    warnings.append(msg)
                     continue
 
                 step_start = time.monotonic()
@@ -127,6 +141,7 @@ async def execute(
                             success=False,
                             error=rejection,
                             steps=tuple(steps),
+                            warnings=tuple(warnings),
                             duration=time.monotonic() - start,
                         )
 
@@ -150,6 +165,7 @@ async def execute(
                         success=False,
                         error=TimeoutError(f"Processor '{name}' timed out after {timeout}s"),
                         steps=tuple(steps),
+                        warnings=tuple(warnings),
                         duration=time.monotonic() - start,
                     )
                 except Exception as e:
@@ -164,6 +180,7 @@ async def execute(
                         success=False,
                         error=e,
                         steps=tuple(steps),
+                        warnings=tuple(warnings),
                         duration=time.monotonic() - start,
                     )
             return Result(
@@ -171,6 +188,7 @@ async def execute(
                 value=context.state,
                 steps=tuple(steps),
                 processors=tuple(ran),
+                warnings=tuple(warnings),
                 duration=time.monotonic() - start,
             )
         elif timeout is not None:
@@ -178,8 +196,18 @@ async def execute(
             for name in pipeline:
                 processor = registry.get(name)
                 if processor is None:
+                    msg = f"Pipeline: processor '{name}' not found in registry, skipping"
+                    if strict:
+                        return Result(
+                            success=False,
+                            error=LookupError(msg),
+                            processors=tuple(ran),
+                            warnings=tuple(warnings),
+                            duration=time.monotonic() - start,
+                        )
                     import logging
-                    logging.warning("Pipeline: processor '%s' not found in registry, skipping", name)
+                    logging.warning(msg)
+                    warnings.append(msg)
                     continue
 
                 try:
@@ -195,6 +223,7 @@ async def execute(
                             success=False,
                             error=rejection,
                             processors=tuple(ran),
+                            warnings=tuple(warnings),
                             duration=time.monotonic() - start,
                         )
 
@@ -204,6 +233,7 @@ async def execute(
                         success=False,
                         error=TimeoutError(f"Processor '{name}' timed out after {timeout}s"),
                         processors=tuple(ran),
+                        warnings=tuple(warnings),
                         duration=time.monotonic() - start,
                     )
                 except Exception as e:
@@ -211,6 +241,7 @@ async def execute(
                         success=False,
                         error=e,
                         processors=tuple(ran),
+                        warnings=tuple(warnings),
                         duration=time.monotonic() - start,
                     )
         else:
@@ -218,8 +249,18 @@ async def execute(
             for name in pipeline:
                 processor = registry.get(name)
                 if processor is None:
+                    msg = f"Pipeline: processor '{name}' not found in registry, skipping"
+                    if strict:
+                        return Result(
+                            success=False,
+                            error=LookupError(msg),
+                            processors=tuple(ran),
+                            warnings=tuple(warnings),
+                            duration=time.monotonic() - start,
+                        )
                     import logging
-                    logging.warning("Pipeline: processor '%s' not found in registry, skipping", name)
+                    logging.warning(msg)
+                    warnings.append(msg)
                     continue
 
                 try:
@@ -232,6 +273,7 @@ async def execute(
                             success=False,
                             error=rejection,
                             processors=tuple(ran),
+                            warnings=tuple(warnings),
                             duration=time.monotonic() - start,
                         )
 
@@ -241,6 +283,7 @@ async def execute(
                         success=False,
                         error=e,
                         processors=tuple(ran),
+                        warnings=tuple(warnings),
                         duration=time.monotonic() - start,
                     )
     finally:
@@ -259,4 +302,5 @@ async def execute(
         processors=tuple(ran),
         duration=time.monotonic() - start,
         steps=tuple(steps) if steps else (),
+        warnings=tuple(warnings),
     )

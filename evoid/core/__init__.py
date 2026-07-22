@@ -23,7 +23,7 @@ from .events import Event, EventContext, on as on_event, off as off_event, emit,
 from .schema import IntentSchema, FieldSchema, export_schemas, export_schema_for, export_json_schemas, export_json_schema
 
 # Annotations
-from .annotations import intent as intent_decorator, requires, validates, rate_limit, apply_annotations, validate_annotations
+from .annotations import intent as intent_decorator, requires, validates, rate_limit, body, params, headers, apply_annotations, validate_annotations
 
 # Convenience functions (Intent-based engine access)
 from . import intents, storage, cache
@@ -82,6 +82,9 @@ __all__ = [
     "requires",
     "validates",
     "rate_limit",
+    "body",
+    "params",
+    "headers",
     "apply_annotations",
     "validate_annotations",
 ]
