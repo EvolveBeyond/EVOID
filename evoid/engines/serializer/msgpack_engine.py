@@ -1,13 +1,15 @@
-"""Msgpack Serializer — Binary serialization, 2-5x faster than JSON.
+"""Msgpack Serializer — Pure functions, IOP compliant.
 
-IOP: Optional engine for high-performance API communication.
-Install: pip install msgpack or evoid[msgpack]
+IOP: Serializer is data + functions, not stateful objects.
+The Intent lives in the data being serialized.
 
 Benefits over JSON:
 - 2-5x smaller payload size
 - 2-5x faster encode/decode
 - Binary format (no string parsing overhead)
 - Native support for bytes, datetime, sets
+
+Install: pip install msgpack or evoid[msgpack]
 """
 
 from __future__ import annotations
@@ -16,8 +18,6 @@ from datetime import date, datetime, time
 from decimal import Decimal
 from typing import Any
 from uuid import UUID
-
-import msgpack
 
 
 def _default(obj: Any) -> Any:
@@ -65,51 +65,33 @@ def _object_hook(obj: dict) -> Any:
     return obj
 
 
+def encode(data: Any) -> bytes:
+    """Encode data to msgpack bytes.
+
+    IOP: Pure function. Intent is in the data, not the serializer.
+    """
+    import msgpack
+    return msgpack.packb(data, default=_default, use_bin_type=True)
+
+
+def decode(data: bytes, schema: type | None = None) -> Any:
+    """Decode msgpack bytes to data.
+
+    IOP: Pure function. Schema validation is Intent-driven.
+    """
+    import msgpack
+    return msgpack.unpackb(data, object_hook=_object_hook, raw=False)
+
+
 class MsgpackSerializer:
-    """Msgpack-based serializer.
+    """Msgpack adapter for SerializerEngine protocol.
 
-    Requires: pip install msgpack
-
-    Benefits:
-    - 2-5x smaller payloads than JSON
-    - 2-5x faster encode/decode
-    - Binary format (no string parsing)
-    - Native bytes support (no base64 overhead)
+    IOP: Adapter pattern — adapts pure functions to protocol interface.
+    The Intent lives in the data being serialized, not here.
     """
 
-    def __init__(
-        self,
-        use_bin_type: bool = True,
-        max_buffer_size: int = 100 * 1024 * 1024,  # 100MB
-    ):
-        self._packer = msgpack.Packer(
-            default=_default,
-            use_bin_type=use_bin_type,
-        )
-        self._max_buffer_size = max_buffer_size
-
     def encode(self, data: Any) -> bytes:
-        """Encode data to msgpack bytes."""
-        return self._packer.pack(data)
+        return encode(data)
 
     def decode(self, data: bytes, schema: type | None = None) -> Any:
-        """Decode msgpack bytes to data.
-
-        Args:
-            data: Msgpack bytes
-            schema: Optional schema for validation (ignored in msgpack,
-                    but kept for API compatibility with JSON serializer)
-        """
-        return msgpack.unpackb(
-            data,
-            object_hook=_object_hook,
-            raw=False,
-        )
-
-
-def register_handlers() -> None:
-    """Register Msgpack serializer as the default serializer engine."""
-    from ..handler import set_handler
-    instance = MsgpackSerializer()
-    set_handler("serializer", "serializer.encode", {"instance": instance})
-    set_handler("serializer", "serializer.decode", {"instance": instance})
+        return decode(data, schema)
