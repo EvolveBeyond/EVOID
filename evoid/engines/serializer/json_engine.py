@@ -1,6 +1,6 @@
-"""JSON Serializer — stdlib json (default, no dependencies).
+"""JSON Serializer — Pure functions, IOP compliant.
 
-IOP: Fallback serializer. Works everywhere.
+IOP: Data carries intent. Serializer adapts to data.
 """
 
 from __future__ import annotations
@@ -10,18 +10,6 @@ from datetime import date, datetime, time
 from decimal import Decimal
 from typing import Any
 from uuid import UUID
-
-
-class JsonSerializer:
-    """Standard library JSON serializer."""
-
-    def encode(self, data: Any) -> bytes:
-        """Encode data to JSON bytes."""
-        return json.dumps(data, default=_default, ensure_ascii=False).encode("utf-8")
-
-    def decode(self, data: bytes, schema: type | None = None) -> Any:
-        """Decode JSON bytes to data."""
-        return json.loads(data.decode("utf-8"))
 
 
 def _default(obj: Any) -> Any:
@@ -41,9 +29,21 @@ def _default(obj: Any) -> Any:
     return str(obj)
 
 
-def register_handlers() -> None:
-    """Register JSON serializer as the default serializer engine."""
-    from ..handler import set_handler
-    instance = JsonSerializer()
-    set_handler("serializer", "serializer.encode", {"instance": instance})
-    set_handler("serializer", "serializer.decode", {"instance": instance})
+def encode(data: Any) -> bytes:
+    """Encode data to JSON bytes."""
+    return json.dumps(data, default=_default, ensure_ascii=False).encode("utf-8")
+
+
+def decode(data: bytes, schema: type | None = None) -> Any:
+    """Decode JSON bytes to data."""
+    return json.loads(data.decode("utf-8"))
+
+
+class JsonSerializer:
+    """Adapter for SerializerEngine protocol."""
+
+    def encode(self, data: Any) -> bytes:
+        return encode(data)
+
+    def decode(self, data: bytes, schema: type | None = None) -> Any:
+        return decode(data, schema)
