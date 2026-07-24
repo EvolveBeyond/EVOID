@@ -5,7 +5,9 @@ description = "EVOID — Reference Runtime for Intent-Oriented Programming"
 authors = [
     { name = "EvolveBeyond", email = "pakrohk@gmail.com" }
 ]
-dependencies = []
+dependencies = [
+    "tomli_w>=1.0.0,<2.0.0",
+]
 requires-python = ">=3.12"
 readme = "README.md"
 license = { text = "Apache-2.0" }
@@ -57,12 +59,14 @@ redis = ["redis>=4.0.0,<5.0.0"]
 sqlalchemy = ["sqlalchemy[asyncio]>=2.0.0,<3.0.0", "aiosqlite>=0.20.0,<0.21.0"]
 # Loguru logger
 loguru = ["loguru>=0.7.0,<0.8.0"]
-# TOML config support
-toml = ["tomli>=2.0.0,<3.0.0", "tomli_w>=1.0.0,<2.0.0"]
+# TOML config support (tomli_w is now required, tomli is builtin in Python 3.11+)
+toml = ["tomli>=2.0.0,<3.0.0"]
+# Msgpack serializer (binary, 2-5x smaller than JSON)
+msgpack = ["msgpack>=1.0.0,<2.0.0"]
 # Testing with WebUI
 testing = ["starlette>=0.27.0,<0.40.0"]
 # Full stack
-full = ["evoid[pydantic,asgi,robyn,telegram,sqlite,redis,sqlalchemy,loguru,toml,testing]"]
+full = ["evoid[pydantic,asgi,robyn,telegram,sqlite,redis,sqlalchemy,loguru,toml,msgpack,testing]"]
 
 [project.entry-points.pytest11]
 evoid = "evoid.testing.plugin"

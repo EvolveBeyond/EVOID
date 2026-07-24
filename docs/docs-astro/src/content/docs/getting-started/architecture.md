@@ -115,14 +115,19 @@ on_event(Event.POST_EXECUTE, log_execution)
 
 ### Message Bus
 
-Services communicate through Intents, not HTTP:
+Services communicate through Intents, not HTTP. The gateway routes Intent to the correct handler — services stay decoupled:
 
 ```python
 from evoid import subscribe, publish
 
-subscribe("order_created", handle_order)
-await publish(order_intent)
+# Service A sends Intent — doesn't know who handles it
+await publish(Intent(name="process_payment", level=Level.CRITICAL))
+
+# Service B subscribes — doesn't know who sent it
+subscribe("process_payment", handle_payment)
 ```
+
+See [Gateway Pattern](../learn/gateway-pattern.md) for full details on decoupled service architecture.
 
 ### Schema Export
 
@@ -176,22 +181,99 @@ Two formats supported:
 
 ### TOML (evoid.toml)
 
+Each service has its own `evoid.toml`:
+
 ```toml
 [service]
 name = "my-api"
 
+[runtime]
+adapter = "asgi"
+port = 8000
+
 [engines]
 storage = "memory"
+
+[pipeline]
+processors = ["validate", "authorize"]
 ```
 
-### Python (evoid_config.py)
+### Project Structure (Multi-Service)
+
+EVOID projects use `evo service new` to create proper service structure. Each service gets its own directory with `evoid.toml` + `main.py`:
+
+```
+my-project/
+├── pyproject.toml           # Project config + [tool.evoid]
+├── shared/                  # Shared code (models, utils)
+│   └── __init__.py
+├── services/
+│   ├── gateway/             # Gateway service
+│   │   ├── evoid.toml       # ← Service-specific config
+│   │   └── main.py          # ← Service code
+│   ├── users/
+│   │   ├── evoid.toml
+│   │   └── main.py
+│   └── payments/
+│       ├── evoid.toml
+│       └── main.py
+└── tests/
+```
+
+**Why `evo service new`?** Each service needs its own `evoid.toml` because:
+1. Services can have different adapters (asgi, telegram, maubot)
+2. Services can have different pipelines (validate only vs full audit)
+3. Services can have different engines (memory vs sqlite vs redis)
+4. Services can run on different ports
+
+```bash
+# Create project
+evo init my-project
+cd my-project
+
+# Add services
+evo service new gateway    # Creates services/gateway/{evoid.toml, main.py}
+evo service new users      # Creates services/users/{evoid.toml, main.py}
+evo service new payments   # Creates services/payments/{evoid.toml, main.py}
+
+# Run
+evo run                    # All services
+evo service run gateway    # Single service
+```
+
+### Serializer Engines
+
+EVOID supports multiple serializers. Choose based on your needs:
+
+| Engine | Install | Size | Speed | Use Case |
+|--------|---------|------|-------|----------|
+| `json` | built-in | 1x | 1x | Default, always works |
+| `msgpack` | `evo install msgpack` | 0.2-0.5x | 2-5x | High-performance APIs |
+| `msgspec` | `pip install msgspec` | 1x | 3-10x | Fastest JSON |
+| `pydantic` | `evo install pydantic` | 1x | 0.5x | Schema validation |
+
+```toml
+# In evoid.toml
+[engines]
+serializer = "msgpack"  # Use msgpack for this service
+```
+
+```python
+# Or set programmatically
+from evoid.engines.serializer import set_serializer
+from evoid.engines.serializer.msgpack_engine import MsgpackSerializer
+
+set_serializer(MsgpackSerializer())
+```
+
+### Python Config
 
 ```python
 from evoid.config import config
 
 app = config(
     service={"name": "my-api"},
-    engines={"storage": "memory"},
+    engines={"storage": "memory", "serializer": "msgpack"},
 )
 ```
 

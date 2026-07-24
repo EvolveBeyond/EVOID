@@ -13,7 +13,16 @@ _serializer: SerializerEngine | None = None
 
 
 def get_serializer() -> SerializerEngine:
-    """Get the active serializer. Falls back to stdlib json."""
+    """Get the active serializer. Falls back to stdlib json.
+
+    Auto-detection order:
+    1. Custom serializer (set via set_serializer)
+    2. msgspec (fastest JSON)
+    3. orjson (fast JSON)
+    4. pydantic (schema validation)
+    5. msgpack (binary, smallest payload)
+    6. stdlib json (always available)
+    """
     global _serializer
     if _serializer is not None:
         return _serializer
@@ -35,6 +44,16 @@ def get_serializer() -> SerializerEngine:
         from .pydantic_engine import PydanticSerializer
         return PydanticSerializer()
     except ImportError:
+        pass
+
+    # Check if user configured msgpack as preferred
+    try:
+        from ...config.loader import load as load_config
+        config = load_config()
+        if config.engines.serializer == "msgpack":
+            from .msgpack_engine import MsgpackSerializer
+            return MsgpackSerializer()
+    except Exception:
         pass
 
     from .json_engine import JsonSerializer

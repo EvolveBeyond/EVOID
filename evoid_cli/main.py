@@ -34,8 +34,6 @@ def cmd_version() -> None:
 # ============================================================
 # Project commands
 # ============================================================
-# Project commands
-# ============================================================
 
 def cmd_init(name: str) -> None:
     """Create new project."""
@@ -44,7 +42,7 @@ def cmd_init(name: str) -> None:
     project = init_project(name)
 
     print(f"Created project: {name}/")
-    print(f"  {name}/evoid.toml")
+    print(f"  {name}/pyproject.toml")
     print(f"  {name}/services/")
     print(f"  {name}/shared/")
     print()
@@ -116,10 +114,49 @@ def cmd_service_run(service_name: str) -> None:
 # Global commands
 # ============================================================
 
-def cmd_sync() -> None:
-    """Sync all project dependencies."""
-    from evoid.config.sync import sync
-    sync("evoid.toml")
+def cmd_sync(args: list[str] | None = None) -> None:
+    """Sync dependencies and pipelines.
+
+    Usage:
+        evo sync                    # sync entire project (all services)
+        evo sync --service <name>   # sync single service
+        evo sync --show             # show packages without installing
+    """
+    from evoid.config.sync import sync, sync_project, show_packages
+
+    args = args or []
+
+    # Parse flags
+    if "--show" in args:
+        # Show packages for all services
+        from pathlib import Path
+        services_dir = Path("services")
+        if not services_dir.exists():
+            print("No services/ directory found.")
+            return
+        for service_dir in sorted(services_dir.iterdir()):
+            if service_dir.is_dir():
+                config_path = service_dir / "evoid.toml"
+                if config_path.exists():
+                    show_packages(str(config_path))
+        return
+
+    if "--service" in args:
+        idx = args.index("--service")
+        if idx + 1 < len(args):
+            service_name = args[idx + 1]
+            from pathlib import Path
+            config_path = Path("services") / service_name / "evoid.toml"
+            if not config_path.exists():
+                print(f"Service '{service_name}' not found at {config_path}")
+                sys.exit(1)
+            sync(str(config_path))
+        else:
+            print("Usage: evo sync --service <name>")
+            sys.exit(1)
+    else:
+        # Sync entire project
+        sync_project(".")
 
 
 def cmd_run() -> None:
@@ -212,6 +249,7 @@ def cmd_install(packages: list[str]) -> None:
         print("  loguru        Loguru logger")
         print("  asgi          ASGI adapter (starlette + uvicorn)")
         print("  toml          TOML config support")
+        print("  msgpack       Msgpack serializer (binary, 2-5x smaller)")
         print("  testing       Testing WebUI")
         print("  full          All optional dependencies")
         print()
@@ -229,7 +267,7 @@ def cmd_install(packages: list[str]) -> None:
         "sqlite": "sqlite", "redis": "redis", "sqlalchemy": "sqlalchemy",
         "pydantic": "pydantic", "loguru": "loguru", "asgi": "asgi",
         "robyn": "robyn", "telegram": "telegram", "toml": "toml",
-        "testing": "testing", "full": "full",
+        "msgpack": "msgpack", "testing": "testing", "full": "full",
     }
 
     # External plugins (evoid-plugins repo)
@@ -260,8 +298,9 @@ def cmd_install(packages: list[str]) -> None:
     if extras:
         spec = f"evoid[{','.join(extras)}]"
         print(f"Installing: {spec}")
-        if shutil.which("uv"):
-            cmd = [sys.executable, "-m", "uv", "add", spec]
+        uv = shutil.which("uv")
+        if uv:
+            cmd = [uv, "add", spec]
         else:
             cmd = [sys.executable, "-m", "pip", "install", spec]
         result = subprocess.run(cmd, capture_output=False)
@@ -272,21 +311,15 @@ def cmd_install(packages: list[str]) -> None:
     # Install plugins
     for plugin in plugins:
         print(f"Installing plugin: {plugin}")
-        if shutil.which("uv"):
-            cmd = [sys.executable, "-m", "uv", "add", plugin]
+        uv = shutil.which("uv")
+        if uv:
+            cmd = [uv, "add", plugin]
         else:
             cmd = [sys.executable, "-m", "pip", "install", plugin]
         result = subprocess.run(cmd, capture_output=False)
         if result.returncode != 0:
             print(f"Failed to install plugin: {plugin}")
             sys.exit(1)
-
-    result = subprocess.run(cmd, capture_output=False)
-    if result.returncode == 0:
-        print(f"\nInstalled: {spec}")
-    else:
-        print("\nInstallation failed")
-        sys.exit(1)
 
 
 def cmd_plug(args: list[str]) -> None:
@@ -354,8 +387,9 @@ def _plug_install(args: list[str]) -> None:
 
     print(f"Installing plugin: {full_name}")
 
-    if shutil.which("uv"):
-        cmd = [sys.executable, "-m", "uv", "add", full_name]
+    uv = shutil.which("uv")
+    if uv:
+        cmd = [uv, "add", full_name]
     else:
         cmd = [sys.executable, "-m", "pip", "install", full_name]
 
@@ -433,7 +467,9 @@ def main() -> None:
         print("  evo service run <name>       s run")
         print()
         print("Global:")
-        print("  evo sync                     Sync dependencies")
+        print("  evo sync                     Sync project (all services)")
+        print("  evo sync --service <name>    Sync single service")
+        print("  evo sync --show              Show packages without installing")
         print("  evo run                      r — Run all services")
         print("  evo serve [host] [port]      sv — Quick serve")
         print("  evo list-intents             li — List intents")
@@ -507,7 +543,7 @@ def main() -> None:
 
     # Global commands
     elif cmd == "sync":
-        cmd_sync()
+        cmd_sync(args[1:])
     elif cmd == "run" or cmd == "r":
         cmd_run()
     elif cmd == "serve" or cmd == "sv":

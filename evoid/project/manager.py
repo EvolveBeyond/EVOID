@@ -4,16 +4,16 @@ IOP: Just data and functions. No classes with behavior.
 
 Project structure:
 my-project/
-├── evoid.toml              # Project config
+├── pyproject.toml           # Project config (pyproject + [tool.evoid])
 ├── services/
 │   ├── user-service/
-│   │   ├── evoid.toml      # Service config
+│   │   ├── evoid.toml       # Service config
 │   │   └── main.py
 │   └── payment-service/
 │       ├── evoid.toml
 │       └── main.py
 └── shared/
-    └── models.py           # Shared models
+    └── models.py            # Shared models
 """
 
 from __future__ import annotations
@@ -62,7 +62,7 @@ def init_project(name: str, path: str | Path = ".") -> ProjectInfo:
     """Create a new project.
 
     Creates:
-    - <name>/evoid.toml (project config)
+    - <name>/pyproject.toml (project config + [tool.evoid])
     - <name>/services/ (services directory)
     - <name>/shared/ (shared code)
     """
@@ -73,25 +73,33 @@ def init_project(name: str, path: str | Path = ".") -> ProjectInfo:
     (project_path / "services").mkdir(exist_ok=True)
     (project_path / "shared").mkdir(exist_ok=True)
 
-    # Create project config
+    # Create pyproject.toml with project metadata + [tool.evoid] config
     config = {
         "project": {
             "name": name,
             "version": "0.1.0",
+            "requires-python": ">=3.12",
+            "dependencies": ["evoid>=0.5.0"],
         },
-        "runtime": {
-            "adapter": "asgi",
-            "host": "0.0.0.0",
+        "build-system": {
+            "requires": ["hatchling"],
+            "build-backend": "hatchling.build",
         },
-        "engines": {
-            "schema": "native",
-            "storage": "memory",
-            "cache": "memory",
-            "logger": "loguru",
+        "tool": {
+            "evoid": {
+                "adapter": "asgi",
+                "host": "0.0.0.0",
+                "engines": {
+                    "schema": "native",
+                    "storage": "memory",
+                    "cache": "memory",
+                    "logger": "loguru",
+                },
+            },
         },
     }
 
-    config_path = project_path / "evoid.toml"
+    config_path = project_path / "pyproject.toml"
     with open(config_path, "wb") as f:
         tomli_w.dump(config, f)
 
@@ -211,13 +219,15 @@ def get_project_config(project_path: str | Path) -> dict[str, Any]:
 # ============================================================
 
 def _load_project_config(project_path: Path) -> dict[str, Any]:
-    """Load project config from evoid.toml."""
-    config_path = project_path / "evoid.toml"
+    """Load project config from pyproject.toml [tool.evoid] section."""
+    config_path = project_path / "pyproject.toml"
     if not config_path.exists():
         return {}
 
     with open(config_path, "rb") as f:
-        return tomli.load(f)
+        data = tomli.load(f)
+
+    return data.get("tool", {}).get("evoid", {})
 
 
 def _load_service_config(config_path: Path) -> dict[str, Any]:

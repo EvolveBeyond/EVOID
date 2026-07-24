@@ -80,7 +80,7 @@ def install_plugin(name: str, use_uv: bool = True) -> bool:
     import shutil
 
     if use_uv and shutil.which("uv"):
-        cmd = [sys.executable, "-m", "uv", "add", name]
+        cmd = [shutil.which("uv"), "add", name]
     else:
         cmd = [sys.executable, "-m", "pip", "install", name]
 

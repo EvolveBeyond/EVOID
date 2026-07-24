@@ -70,23 +70,59 @@ def load_config(path: str | Path | None = None) -> EvoidConfig:
     """Load config from file (TOML or Python).
 
     Auto-detects format:
-    - evoid.toml → TOML
+    - evoid.toml → TOML (service-level)
+    - pyproject.toml → TOML with [tool.evoid] (project-level)
     - evoid_config.py → Python
-    - None → tries both
+    - None → tries all
     """
     if path is not None:
         return _load_from_path(Path(path))
 
-    # Try both formats
+    # Try all formats
     toml_path = Path("evoid.toml")
+    pyproject_path = Path("pyproject.toml")
     py_path = Path("evoid_config.py")
 
     if toml_path.exists():
         return _load_from_path(toml_path)
+    elif pyproject_path.exists():
+        return _load_from_pyproject(pyproject_path)
     elif py_path.exists():
         return _load_from_path(py_path)
 
     return EvoidConfig()  # Default config
+
+
+def _load_from_pyproject(path: Path) -> EvoidConfig:
+    """Load config from pyproject.toml [tool.evoid] section."""
+    try:
+        import tomllib
+    except ImportError:
+        try:
+            import tomli as tomllib
+        except ImportError:
+            return EvoidConfig()
+
+    with open(path, "rb") as f:
+        data = tomllib.load(f)
+
+    evoid_data = data.get("tool", {}).get("evoid", {})
+    if not evoid_data:
+        return EvoidConfig()
+
+    return EvoidConfig(
+        runtime=RuntimeConfig(
+            adapter=evoid_data.get("adapter", "asgi"),
+            host=evoid_data.get("host", "0.0.0.0"),
+            port=evoid_data.get("port", 8000),
+        ),
+        engines=EnginesConfig(
+            schema=evoid_data.get("engines", {}).get("schema", "native"),
+            storage=evoid_data.get("engines", {}).get("storage", "memory"),
+            cache=evoid_data.get("engines", {}).get("cache", "memory"),
+            logger=evoid_data.get("engines", {}).get("logger", "structlog"),
+        ),
+    )
 
 
 def _load_from_path(path: Path) -> EvoidConfig:
